@@ -9,3 +9,4 @@ api/.env
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 /static/videos
+.idea
