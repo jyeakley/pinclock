@@ -19,6 +19,7 @@ services:
       - SOURCE_PATH=/media/justin/pinclock/videos
     volumes:
       - videos:/static/videos
+      - /media/justin:/media/justin
     ports:
       - 3001:3001
     command: node api/server.js
