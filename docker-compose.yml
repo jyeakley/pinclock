@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  pinclock:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: pinclock:latest
+    volumes:
+      - videos:/build/client/videos
+    ports:
+      - 3000:3000
+  pinclock-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: pinclock:latest
+    environment:
+      - SOURCE_PATH=/media/justin/pinclock/videos
+    volumes:
+      - videos:/static/videos
+    ports:
+      - 3001:3001
+    command: node api/server.js
+
+volumes:
+  videos:
