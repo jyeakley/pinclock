@@ -16,7 +16,7 @@ app.use(cors());
 async function getVideoFilesRecursive(dir) {
     const entries = await fs.readdir(dir, { withFileTypes: true });
     const files = entries
-        .filter((entry) => entry.isFile() && path.extname(entry.name) === ".mp4" &&
+        .filter((entry) => entry.isFile() && (path.extname(entry.name) === ".mp4" || path.extname(entry.name) === ".webm") &&
             !entry.name.startsWith("."))
         .map((entry) => path.join(dir, entry.name));
     const dirPromises = entries
