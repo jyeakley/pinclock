@@ -45,20 +45,34 @@
         z-index: 2;
         display: flex;
         flex-direction: column;
-        max-height: 80vh;
+        max-height: 90vh;
         overflow-y: auto;
         margin-bottom: 1rem;
         border-radius: 10px;
         width: 90%;
         max-width: 450px;
+        box-sizing: border-box;
     }
 
-    @media screen and (min-width: 800px) {
+    @media screen and (min-height: 600px) {
         .settings {
-            width: auto;
-            left: 85%;
-            top: 30%;
+            top: 50%;
+            transform: translate(-50%, -50%);
         }
+    }
+
+    @media screen and (max-height: 599px) {
+        .settings {
+            top: 0;
+            transform: translate(-50%, 0);
+            height: 100vh;
+        }
+    }
+
+
+    .settings-container {
+        display: flex;
+        flex-direction: column;
     }
 
     .setting-label {
