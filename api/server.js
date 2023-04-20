@@ -86,7 +86,19 @@ app.delete('/api/clear_videos', async (req, res) => {
         await fs.rmdir(dirPath);
     }
 
+    async function removeFiles(dirPath) {
+        const files = await fs.readdir(dirPath, { withFileTypes: true });
+
+        await Promise.all(files.map(async (file) => {
+            const fullPath = path.join(dirPath, file.name);
+            if (!file.isDirectory()) {
+                await fs.unlink(fullPath);
+            }
+        }));
+    }
+
     try {
+        console.log(videoDir)
         const subDirectories = (await fs.readdir(videoDir, { withFileTypes: true }))
             .filter((dirEnt) => dirEnt.isDirectory())
             .map((dirEnt) => path.join(videoDir, dirEnt.name));
@@ -95,12 +107,16 @@ app.delete('/api/clear_videos', async (req, res) => {
             await removeDirectoryRecursive(dirPath);
         }));
 
+        // Remove files in the videoDir
+        await removeFiles(videoDir);
+
         res.json({ message: 'Videos and directories cleared successfully' });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Unable to clear video directory' });
     }
 });
+
 
 
 app.listen(PORT, () => {

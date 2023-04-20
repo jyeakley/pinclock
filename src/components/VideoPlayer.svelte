@@ -77,7 +77,6 @@
         id="background-video"
         class="background"
         src="/videos/{videos[videoIndex]}"
-        preload = 'metadata'
         autoplay
         loop
         muted
