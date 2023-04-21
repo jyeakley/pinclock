@@ -151,7 +151,7 @@
             <br/>
             <br/>
             <label class="setting-label">
-                Clear all vidoes:
+                Clear all videos:
                 <button on:click="{clearVideos}">Clear</button>
             </label>
             <br/>

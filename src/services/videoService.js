@@ -5,7 +5,6 @@ export async function fetchVideos() {
     if (response.ok) {
         const files = await response.json();
         videoFiles.set(files);
-        console.log(videoFiles)
     } else {
         console.error("Error fetching video files");
     }

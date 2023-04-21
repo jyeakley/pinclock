@@ -12,8 +12,10 @@
     });
 
     async function changeBackground() {
-        console.log($randomizeVideos)
         $showBlackBackground = true;
+        if (videos.length === 0) {
+            return;
+        }
         await new Promise((resolve) => setTimeout(resolve, 1000));
 
         // Select a video based on the randomizeVideos setting
@@ -22,6 +24,10 @@
             videoIndex = randomIndex;
         } else {
             videoIndex = (videoIndex + 1) % videos.length;
+        }
+
+        if (!videos[videoIndex]) {
+            return;
         }
 
         const videoElement = document.getElementById("background-video");
@@ -35,7 +41,9 @@
 
     // Subscribe to the videoFiles store
     const unsubscribe = videoFiles.subscribe((value) => {
+        console.log("CHANGING")
         videos = value;
+        changeBackground()
     });
 
     // Unsubscribe from the store when the component is destroyed

@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import fs from 'fs/promises';
+import fss from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
@@ -71,44 +72,51 @@ app.delete('/api/clear_videos', async (req, res) => {
     const __dirname = dirname(__filename);
     const videoDir = path.join(__dirname, '../static/videos');
 
-    async function removeDirectoryRecursive(dirPath) {
-        const files = await fs.readdir(dirPath, { withFileTypes: true });
+    function removeDirectoryRecursiveSync(dirPath) {
+        if (!fss.existsSync(dirPath)) {
+            return;
+        }
 
-        await Promise.all(files.map(async (file) => {
+        const files = fss.readdirSync(dirPath, { withFileTypes: true });
+
+        files.forEach((file) => {
             const fullPath = path.join(dirPath, file.name);
             if (file.isDirectory()) {
-                await removeDirectoryRecursive(fullPath);
+                removeDirectoryRecursiveSync(fullPath);
             } else {
-                await fs.unlink(fullPath);
+                fss.unlinkSync(fullPath);
             }
-        }));
+        });
 
-        await fs.rmdir(dirPath);
+        fss.rmdirSync(dirPath);
     }
 
-    async function removeFiles(dirPath) {
-        const files = await fs.readdir(dirPath, { withFileTypes: true });
+    function removeFilesSync(dirPath) {
+        const files = fss.readdirSync(dirPath, { withFileTypes: true });
 
-        await Promise.all(files.map(async (file) => {
+        files.forEach((file) => {
             const fullPath = path.join(dirPath, file.name);
             if (!file.isDirectory()) {
-                await fs.unlink(fullPath);
+                fss.unlinkSync(fullPath);
             }
-        }));
+        });
     }
 
     try {
-        console.log(videoDir)
-        const subDirectories = (await fs.readdir(videoDir, { withFileTypes: true }))
+        console.log(videoDir);
+        const dirEntries = fss.readdirSync(videoDir, { withFileTypes: true });
+        const subDirectories = dirEntries
             .filter((dirEnt) => dirEnt.isDirectory())
             .map((dirEnt) => path.join(videoDir, dirEnt.name));
 
-        await Promise.all(subDirectories.map(async (dirPath) => {
-            await removeDirectoryRecursive(dirPath);
-        }));
+        subDirectories.forEach((dirPath) => {
+            if (fss.existsSync(dirPath)) {
+                removeDirectoryRecursiveSync(dirPath);
+            }
+        });
 
         // Remove files in the videoDir
-        await removeFiles(videoDir);
+        removeFilesSync(videoDir);
 
         res.json({ message: 'Videos and directories cleared successfully' });
     } catch (err) {
