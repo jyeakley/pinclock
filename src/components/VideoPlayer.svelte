@@ -26,7 +26,7 @@
             videoIndex = (videoIndex + 1) % videos.length;
         }
 
-        if (!videos[videoIndex]) {
+        if (!videos[videoIndex] || videos[videoIndex] === 'undefined') {
             return;
         }
 
@@ -41,7 +41,6 @@
 
     // Subscribe to the videoFiles store
     const unsubscribe = videoFiles.subscribe((value) => {
-        console.log("CHANGING")
         videos = value;
         changeBackground()
     });
@@ -81,13 +80,15 @@
     }
 </style>
 
-<video
-        id="background-video"
-        class="background"
-        src="/videos/{videos[videoIndex]}"
-        autoplay
-        loop
-        muted
-        on:ended={changeBackground}
-></video>
+{#if videos[videoIndex]}
+    <video
+            id="background-video"
+            class="background"
+            src="/videos/{videos[videoIndex]}"
+            autoplay
+            loop
+            muted
+            on:ended={changeBackground}
+    ></video>
+{/if}
 <div class="black-background" class:show="{$showBlackBackground}"></div>

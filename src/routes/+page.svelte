@@ -12,7 +12,6 @@
 
     const randomizeVideos = writable(false);
 
-    let time = new Date();
     let videoIndex = 0;
     let showDialog = false;
     let clockColor = 'white';
@@ -82,12 +81,6 @@
         showClock = event.target.checked;
         localStorage.setItem("showClock", showClock);
     }
-
-    function updateTime() {
-        time = new Date();
-    }
-
-    setInterval(updateTime, 1000);
 
     function toggleDialog() {
         showDialog = !showDialog;
@@ -254,7 +247,6 @@
 
 {#if showClock || $showBlackBackground}
     <Clock
-            {time}
             {clockFont}
             {clockColor}
             {clockFontSize}

@@ -1,7 +1,9 @@
 <script>
     import {videoFiles} from '../videoStore.js';
+    import {overriddenClockTime} from '../store.js';
     import {addVideosFromSource, clearVideos, fetchVideos} from '../services/videoService.js';
-    import {onDestroy} from "svelte";
+    import {onDestroy, onMount} from "svelte";
+
 
     export let showDialog;
     export let updateClockFont;
@@ -23,6 +25,26 @@
     export let updateRandomizeVideos;
     export let updateClockFontSize;
     let videos;
+    let manualTime = "";
+
+    function updateManualTime(event) {
+        const value = event.target.value;
+        $overriddenClockTime = value ? new Date(value) : null;
+        localStorage.setItem('overriddenClockTime', $overriddenClockTime ? $overriddenClockTime.toISOString() : null);
+        manualTime = value;
+    }
+
+
+    onMount(() => {
+        const savedOverriddenClockTime = localStorage.getItem("overriddenClockTime");
+        if (savedOverriddenClockTime) {
+            const savedDate = new Date(savedOverriddenClockTime);
+            const localDate = new Date(savedDate.getTime() - savedDate.getTimezoneOffset() * 60000);
+            manualTime = localDate.toISOString().slice(0, 19);
+        }
+    });
+
+
 
     // Subscribe to the videoFiles store
     const unsubscribe = videoFiles.subscribe((value) => {
@@ -112,6 +134,11 @@
                 </select>
             </label>
             <br/>
+            <label class="setting-label">
+                Manual clock time (yyyy-mm-ddThh:mm:ss):
+                <input type="datetime-local" bind:value="{manualTime}" on:change="{updateManualTime}" />
+            </label>
+            <br />
             <label class="setting-label">
                 Clock color:
                 <input type="color" value={clockColor} on:change="{updateClockColor}"/>
