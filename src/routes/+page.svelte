@@ -16,7 +16,7 @@
     let showDialog = false;
     let clockColor = 'white';
     let clockFontSize = '48px';
-    let clockFormatLabel = 'HH:mm:ss'
+    let clockFormatLabel = 'h:mm:ss a'
     let showClock = true;
     let videos;
 
@@ -106,9 +106,13 @@
         if (savedClockFormat) {
             $clockFormat = JSON.parse(savedClockFormat).value;
             clockFormatLabel = JSON.parse(savedClockFormat).label
+        }else{
+            clockFormatLabel = 'h:mm:ss a'
         }
         if (savedClockColor) {
             clockColor = savedClockColor;
+        }else{
+            clockColor = '#ffffff'
         }
         if (savedClockFontSize) {
             clockFontSize = savedClockFontSize;

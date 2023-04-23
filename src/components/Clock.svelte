@@ -33,6 +33,16 @@
     });
     onDestroy(unsubscribe);
 
+    if (typeof window !== 'undefined') {
+        window.addEventListener('beforeunload', () => {
+            const savedOverriddenClockTime = localStorage.getItem("overriddenClockTime");
+            if (savedOverriddenClockTime !== null && savedOverriddenClockTime !== 'null') {
+                localStorage.setItem('overriddenClockTime', time ? time.toISOString() : null);
+            }
+        });
+    }
+
+
     function tick() {
         if (!$overriddenClockTime) {
             time = new Date();

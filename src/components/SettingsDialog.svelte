@@ -67,7 +67,7 @@
         const savedVideoFadeOutTime = localStorage.getItem("videoFadeOutTime");
         const savedTimeBetweenVideos = localStorage.getItem("timeBetweenVideos");
 
-        if (savedOverriddenClockTime) {
+        if (savedOverriddenClockTime !== null && savedOverriddenClockTime !== 'null') {
             const savedDate = new Date(savedOverriddenClockTime);
             const localDate = new Date(savedDate.getTime() - savedDate.getTimezoneOffset() * 60000);
             manualTime = localDate.toISOString().slice(0, 19);
