@@ -1,6 +1,6 @@
 <script>
     import {videoFiles} from '../videoStore.js';
-    import {overriddenClockTime} from '../store.js';
+    import {overriddenClockTime, clockTextShadow} from '../store.js';
     import {addVideosFromSource, clearVideos, fetchVideos} from '../services/videoService.js';
     import {onDestroy, onMount} from "svelte";
 
@@ -27,6 +27,14 @@
     let videos;
     let manualTime = "";
 
+    // Add this function in the <script> section
+    function updateClockTextShadow(event) {
+        const value = event.target.value;
+        $clockTextShadow = parseInt(value);
+        localStorage.setItem("clockTextShadow", $clockTextShadow);
+    }
+
+
     function updateManualTime(event) {
         const value = event.target.value;
         $overriddenClockTime = value ? new Date(value) : null;
@@ -37,10 +45,15 @@
 
     onMount(() => {
         const savedOverriddenClockTime = localStorage.getItem("overriddenClockTime");
+        const savedClockTextShadow = localStorage.getItem("clockTextShadow");
+
         if (savedOverriddenClockTime) {
             const savedDate = new Date(savedOverriddenClockTime);
             const localDate = new Date(savedDate.getTime() - savedDate.getTimezoneOffset() * 60000);
             manualTime = localDate.toISOString().slice(0, 19);
+        }
+        if (savedClockTextShadow) {
+            $clockTextShadow = parseInt(savedClockTextShadow);
         }
     });
 
@@ -139,6 +152,11 @@
                 <input type="datetime-local" bind:value="{manualTime}" on:change="{updateManualTime}" />
             </label>
             <br />
+            <label class="setting-label">
+                Clock text shadow:
+                <input type="range" min="0" max="30" bind:value={$clockTextShadow} on:change="{updateClockTextShadow}"/>
+            </label>
+            <br/>
             <label class="setting-label">
                 Clock color:
                 <input type="color" value={clockColor} on:change="{updateClockColor}"/>

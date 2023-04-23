@@ -1,5 +1,5 @@
 <script>
-    import {overriddenClockTime} from '../store.js';
+    import {overriddenClockTime, clockTextShadow} from '../store.js';
     import {onMount, onDestroy} from "svelte";
 
     export let clockFont;
@@ -14,8 +14,13 @@
     onMount(() => {
         interval = setInterval(tick, 1000);
         const savedOverriddenClockTime = localStorage.getItem("overriddenClockTime");
+        const savedClockTextShadow = localStorage.getItem("clockTextShadow");
+
         if (savedOverriddenClockTime !== null && savedOverriddenClockTime !== 'null') {
             $overriddenClockTime = new Date(savedOverriddenClockTime);
+        }
+        if (savedClockTextShadow) {
+            $clockTextShadow = parseInt(savedClockTextShadow);
         }
     });
 
@@ -46,6 +51,6 @@
     }
 </style>
 
-<div class="clock" style="font-family: {$clockFont}; color: {clockColor}; font-size: {clockFontSize}; margin-top: {$clockPositionY}px; margin-left: {$clockPositionX}px;">
+<div class="clock" style="font-family: {$clockFont}; color: {clockColor}; font-size: {clockFontSize}; margin-top: {$clockPositionY}px; margin-left: {$clockPositionX}px; text-shadow: 0 {$clockTextShadow}px {$clockTextShadow}px rgba(0, 0, 0, 0.5);">
     {time.toLocaleTimeString('en-US', $clockFormat)}
 </div>
