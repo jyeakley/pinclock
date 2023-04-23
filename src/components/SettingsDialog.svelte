@@ -1,5 +1,5 @@
 <script>
-    import {videoFiles} from '../videoStore.js';
+    import {videoFiles, videoFadeOutTime, timeBetweenVideos, videoPlayTime} from '../videoStore.js';
     import {overriddenClockTime, clockTextShadow} from '../store.js';
     import {addVideosFromSource, clearVideos, fetchVideos} from '../services/videoService.js';
     import {onDestroy, onMount} from "svelte";
@@ -34,6 +34,24 @@
         localStorage.setItem("clockTextShadow", $clockTextShadow);
     }
 
+    // Add these functions in the <script> section
+    function updateVideoFadeOutTime(event) {
+        const value = parseFloat(event.target.value);
+        $videoFadeOutTime = value;
+        localStorage.setItem("videoFadeOutTime", $videoFadeOutTime);
+    }
+
+    function updateTimeBetweenVideos(event) {
+        const value = parseFloat(event.target.value);
+        $timeBetweenVideos = value;
+        localStorage.setItem("timeBetweenVideos", $timeBetweenVideos);
+    }
+
+    function updateVideoPlayTime(event) {
+        const value = parseFloat(event.target.value);
+        $videoPlayTime = value;
+        localStorage.setItem("videoPlayTime", $videoPlayTime);
+    }
 
     function updateManualTime(event) {
         const value = event.target.value;
@@ -46,6 +64,8 @@
     onMount(() => {
         const savedOverriddenClockTime = localStorage.getItem("overriddenClockTime");
         const savedClockTextShadow = localStorage.getItem("clockTextShadow");
+        const savedVideoFadeOutTime = localStorage.getItem("videoFadeOutTime");
+        const savedTimeBetweenVideos = localStorage.getItem("timeBetweenVideos");
 
         if (savedOverriddenClockTime) {
             const savedDate = new Date(savedOverriddenClockTime);
@@ -54,6 +74,12 @@
         }
         if (savedClockTextShadow) {
             $clockTextShadow = parseInt(savedClockTextShadow);
+        }
+        if (savedVideoFadeOutTime) {
+            $videoFadeOutTime = parseFloat(savedVideoFadeOutTime);
+        }
+        if (savedTimeBetweenVideos) {
+            $timeBetweenVideos = parseFloat(savedTimeBetweenVideos);
         }
     });
 
@@ -85,7 +111,7 @@
         margin-bottom: 1rem;
         border-radius: 10px;
         width: 90%;
-        max-width: 450px;
+        max-width: 475px;
         box-sizing: border-box;
     }
 
@@ -182,6 +208,21 @@
             <label class="setting-label">
                 Always show clock:
                 <input type="checkbox" checked="{showClock}" on:change="{updateClockVisibility}"/>
+            </label>
+            <br/>
+            <label class="setting-label">
+                Video fade time (seconds, Default: 0):
+                <input type="number" min="0" step="1" bind:value={$videoFadeOutTime} on:change="{updateVideoFadeOutTime}"/>
+            </label>
+            <br/>
+            <label class="setting-label">
+                Time between videos (seconds, Default: 3):
+                <input type="number" min="0" step="1" bind:value={$timeBetweenVideos} on:change="{updateTimeBetweenVideos}"/>
+            </label>
+            <br/>
+            <label class="setting-label">
+                Video Play Time (seconds, Default: 5):
+                <input type="number" min="1" step="1" bind:value={$videoPlayTime} on:change="{updateVideoPlayTime}"/>
             </label>
             <br/>
             <button on:click={fetchVideos}>Refresh Videos</button>

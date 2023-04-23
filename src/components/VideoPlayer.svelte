@@ -1,5 +1,5 @@
 <script>
-    import { videoFiles, showBlackBackground } from '../videoStore.js';
+    import { videoFiles, showBlackBackground,videoFadeOutTime, timeBetweenVideos, videoPlayTime } from '../videoStore.js';
     import { onMount } from 'svelte';
     import {onDestroy} from "svelte";
     export let videoIndex;
@@ -8,7 +8,21 @@
     let videos;
 
     onMount(() => {
-        changeBackground();
+        const savedVideoFadeOutTime = localStorage.getItem("videoFadeOutTime");
+        const savedTimeBetweenVideos = localStorage.getItem("timeBetweenVideos");
+        const savedVideoPlayTime = localStorage.getItem("videoPlayTime");
+
+        if (savedVideoFadeOutTime) {
+            $videoFadeOutTime = parseFloat(savedVideoFadeOutTime);
+        }
+        if (savedTimeBetweenVideos) {
+            $timeBetweenVideos = parseFloat(savedTimeBetweenVideos);
+        }
+        if (savedVideoPlayTime) {
+            $videoPlayTime = parseFloat(savedVideoPlayTime);
+        }
+
+        setTimeout(changeBackground);
     });
 
     async function changeBackground() {
@@ -32,11 +46,15 @@
 
         const videoElement = document.getElementById("background-video");
         videoElement.src = `/videos/${encodeURIComponent(videos[videoIndex])}`;
+        videoElement.style.transition = `opacity ${$videoFadeOutTime}s`;
+        videoElement.style.opacity = 0;
         videoElement.play();
-        await new Promise((resolve) => setTimeout(resolve, 4000));
+        await new Promise((resolve) => setTimeout(resolve, $timeBetweenVideos * 1000));
+        videoElement.style.opacity = 1;
+
         $showBlackBackground = false;
 
-        setTimeout(changeBackground, 5000);
+        setTimeout(changeBackground, $videoPlayTime * 1000);
     }
 
     // Subscribe to the videoFiles store
