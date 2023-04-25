@@ -29,13 +29,14 @@
     onDestroy(unsubscribe);
 
     const fontOptions = [
+        { label: "Aileron", value: "Aileron" },
         { label: "Arcade", value: "Arcade" },
         { label: "Arcade Alternate", value: "Arcade Alternate" },
         { label: "Arcade Book", value: "Arcade Book" },
         { label: "Arcade Classic", value: "Arcade Classic" },
         { label: "Arcade Future", value: "Arcade Future" },
-        { label: "Aracde v0.1", value: "Aracde v0.1" },
         { label: "Arcade Nightmare", value: "Arcade Nightmare" },
+        { label: "Aracde v0.1", value: "Aracde v0.1" },
         { label: "ARCADE I", value: "ARCADE I" },
         { label: "ARCADE N", value: "ARCADE N" },
         { label: "ARCADE R", value: "ARCADE R" },
@@ -45,19 +46,43 @@
         { label: "Arial", value: "Arial" },
         { label: "Barcade", value: "Barcade" },
         { label: "Black Arcade", value: "Black Arcade" },
+        { label: "Century Gothic", value: "Century Gothic" },
+        { label: "Comfortaa", value: "Comfortaa" },
         { label: "Courier New", value: "Courier New" },
         { label: "Digital Arcade", value: "Digital Arcade" },
+        { label: "Exo", value: "Exo" },
+        { label: "Futura", value: "Futura" },
+        { label: "Gotham", value: "Gotham" },
         { label: "Helvetica", value: "Helvetica" },
+        { label: "Helvetica Neue", value: "Helvetica Neue" },
+        { label: "Inter", value: "Inter" },
+        { label: "Josefin Sans", value: "Josefin Sans" },
         { label: "Karmatic Arcade", value: "Karmatic Arcade" },
+        { label: "Lato", value: "Lato" },
+        { label: "Montserrat", value: "Montserrat" },
         { label: "New Arcade", value: "New Arcade" },
+        { label: "Nunito", value: "Nunito" },
+        { label: "Open Sans", value: "Open Sans" },
         { label: "Our Arcade Games", value: "Our Arcade Games" },
+        { label: "Oswald", value: "Oswald" },
         { label: "PinBall", value: "PinBall" },
+        { label: "Poppins", value: "Poppins" },
+        { label: "PT Sans", value: "PT Sans" },
+        { label: "Raleway", value: "Raleway" },
+        { label: "Roboto", value: "Roboto" },
         { label: "Sega Arcade", value: "Sega Arcade" },
+        { label: "Source Sans Pro", value: "Source Sans Pro" },
         { label: "Times New Roman", value: "Times New Roman" },
-        { label: "Verdana", value: "Verdana" }
-    ];
+        { label: "Titillium Web", value: "Titillium Web" },
+        { label: "Ubuntu", value: "Ubuntu" },
+        { label: "Varela Round", value: "Varela Round" },
+        { label: "Verdana", value: "Verdana" },
+        { label: "Work Sans", value: "Work Sans" },
+        { label: "Yantramanav", value: "Yantramanav" },
+        { label: "Zilla Slab", value: "Zilla Slab" }
+    ]
 
-    function updateClockFontSize(event) {
+            function updateClockFontSize(event) {
         clockFontSize = event.target.value + 'px';
         localStorage.setItem('clockFontSize', clockFontSize);
     }
@@ -146,7 +171,18 @@
         { label: 'HH:mm', value: { hour: '2-digit', minute: '2-digit', hour12: false } },
         { label: 'h:mm:ss a', value: { hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true } },
         { label: 'h:mm a', value: { hour: 'numeric', minute: '2-digit', hour12: true } },
+        { label: 'EEEE HH:mm:ss', value: { weekday: 'long', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false } },
+        { label: 'EEEE HH:mm', value: { weekday: 'long', hour: '2-digit', minute: '2-digit', hour12: false } },
+        { label: 'EEE h:mm:ss a', value: { weekday: 'short', hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true } },
+        { label: 'EEE h:mm a', value: { weekday: 'short', hour: 'numeric', minute: '2-digit', hour12: true } },
+        { label: 'HH:mm', value: { hour: '2-digit', minute: '2-digit', hour12: false } },
+        { label: 'hh:mm a', value: { hour: '2-digit', minute: '2-digit', hour12: true } },
+        { label: 'H:mm:ss', value: { hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: false } },
+        { label: 'h:mm:ss.SSS a', value: { hour: 'numeric', minute: '2-digit', second: '2-digit', fractionalSecondDigits: 3, hour12: true } },
+        { label: 'hh:mm:ss a', value: { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true } },
+        { label: 'HH:mm:ss z', value: { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZoneName: 'short', hour12: false } },
     ];
+
 
     function updateClockFormat(event) {
         const selectedFormat = JSON.parse(event.target.value);
