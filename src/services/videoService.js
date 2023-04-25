@@ -1,9 +1,9 @@
 import { videoFiles } from '../videoStore.js';
 
-const HOSTNAME_URL = 'http://localhost:3001'
+const HOSTNAME_URL = import.meta.env.VITE_HOSTNAME_URL || 'http://localhost:3001';
 
 export async function fetchVideos(folders = null) {
-    console.log(folders)
+    console.log(import.meta.env.VITE_HOSTNAME_URL)
     const folderParam = folders !== null ? "?folders=" + folders : "";
     const response = await fetch(HOSTNAME_URL + "/api/videos" + folderParam);
 
