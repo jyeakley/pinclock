@@ -1,7 +1,12 @@
 import { videoFiles } from '../videoStore.js';
 
-export async function fetchVideos() {
-    const response = await fetch("http://localhost:3001/api/videos");
+const HOSTNAME_URL = 'http://localhost:3001'
+
+export async function fetchVideos(folders = null) {
+    console.log(folders)
+    const folderParam = folders !== null ? "?folders=" + folders : "";
+    const response = await fetch(HOSTNAME_URL + "/api/videos" + folderParam);
+
     if (response.ok) {
         const files = await response.json();
         videoFiles.set(files);
@@ -12,7 +17,7 @@ export async function fetchVideos() {
 
 export async function addVideosFromSource() {
     try {
-        const response = await fetch("http://localhost:3001/api/add_videos_from_source", {
+        const response = await fetch(HOSTNAME_URL + "/api/add_videos_from_source", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -33,7 +38,7 @@ export async function addVideosFromSource() {
 
 export async function clearVideos() {
     try {
-        const response = await fetch('http://localhost:3001/api/clear_videos', { method: 'DELETE' });
+        const response = await fetch(HOSTNAME_URL + '/api/clear_videos', { method: 'DELETE' });
 
         if (response.ok) {
             const result = await response.json();
@@ -45,4 +50,9 @@ export async function clearVideos() {
     } catch (err) {
         console.error(err);
     }
+}
+
+export async function fetchVideoFolders() {
+    const response = await fetch(HOSTNAME_URL + '/api/video-folders');
+    return await response.json();
 }

@@ -87,8 +87,6 @@
     }
 
     onMount(async () => {
-        await fetchVideos();
-
         // Load saved settings from localStorage
         const savedClockFont = localStorage.getItem('clockFont');
         const savedClockFormat = localStorage.getItem('clockFormat');
@@ -98,7 +96,7 @@
         const savedClockPositionY = localStorage.getItem('clockPositionY');
         const savedShowClock = localStorage.getItem("showClock");
         const savedRandomizeVideos = localStorage.getItem("randomizeVideos");
-
+        const savedSelectedFolders = localStorage.getItem("selectedFolders");
 
         if (savedClockFont) {
             $clockFont = savedClockFont;
@@ -129,6 +127,7 @@
         if (savedRandomizeVideos !== null) {
             $randomizeVideos = savedRandomizeVideos === "true";
         }
+        await fetchVideos(savedSelectedFolders ? savedSelectedFolders : []);
     });
 
     function updateRandomizeVideos(event) {

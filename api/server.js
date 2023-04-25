@@ -14,32 +14,54 @@ const sourcePath = process.env.SOURCE_PATH;
 dotenv.config();
 app.use(cors());
 
-async function getVideoFilesRecursive(dir) {
-    const entries = await fs.readdir(dir, { withFileTypes: true });
-    const files = entries
-        .filter((entry) => entry.isFile() && (path.extname(entry.name) === ".mp4" || path.extname(entry.name) === ".webm") &&
-            !entry.name.startsWith("."))
-        .map((entry) => path.join(dir, entry.name));
-    const dirPromises = entries
-        .filter((entry) => entry.isDirectory())
-        .map((entry) => getVideoFilesRecursive(path.join(dir, entry.name)));
-    const subDirFiles = await Promise.all(dirPromises);
-    return files.concat(...subDirFiles);
-}
-
 app.get("/api/videos", async (req, res) => {
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = dirname(__filename);
     const videoDir = path.join(__dirname, "../static/videos");
+    const selectedFolders = req.query.folders ? req.query.folders.split(",") : [];
 
     try {
-        const videoFiles = await getVideoFilesRecursive(videoDir);
+        const videoFiles = await getVideoFilesRecursive(videoDir, selectedFolders);
         const relativePaths = videoFiles.map((filePath) => path.relative(videoDir, filePath));
         res.json(relativePaths);
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: "Unable to read video directory" });
     }
+});
+
+async function getVideoFilesRecursive(dir, selectedFolders = []) {
+    const entries = await fs.readdir(dir, { withFileTypes: true });
+
+    const files = entries
+        .filter((entry) => entry.isFile() && (path.extname(entry.name) === ".mp4" || path.extname(entry.name) === ".webm") &&
+            !entry.name.startsWith("."))
+        .map((entry) => path.join(dir, entry.name));
+
+    const dirPromises = entries
+        .filter((entry) => entry.isDirectory() && (selectedFolders.length === 0 || selectedFolders.includes(entry.name)))
+        .map((entry) => getVideoFilesRecursive(path.join(dir, entry.name), selectedFolders));
+
+    const subDirFiles = await Promise.all(dirPromises);
+    return files.concat(...subDirFiles);
+}
+
+app.get('/api/video-folders', (req, res) => {
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = dirname(__filename);
+    const videoFolderPath = path.join(__dirname, "../static/videos");
+    fss.readdir(videoFolderPath, { withFileTypes: true }, (err, items) => {
+        if (err) {
+            console.error(err);
+            res.status(500).send('Error reading video folders');
+            return;
+        }
+        const folderNames = items
+            .filter((item) => item.isDirectory())
+            .map((item) => item.name);
+
+        res.json(folderNames);
+    });
 });
 
 app.post("/api/add_videos_from_source", async (req, res) => {

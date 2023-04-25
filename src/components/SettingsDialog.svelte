@@ -1,9 +1,8 @@
 <script>
     import {videoFiles, videoFadeOutTime, timeBetweenVideos, videoPlayTime} from '../videoStore.js';
     import {overriddenClockTime, clockTextShadow} from '../store.js';
-    import {addVideosFromSource, clearVideos, fetchVideos} from '../services/videoService.js';
+    import {addVideosFromSource, clearVideos, fetchVideos, fetchVideoFolders} from '../services/videoService.js';
     import {onDestroy, onMount} from "svelte";
-
 
     export let showDialog;
     export let updateClockFont;
@@ -26,6 +25,8 @@
     export let updateClockFontSize;
     let videos;
     let manualTime = "";
+    let folders = [];
+    let selected = "";
 
     // Add this function in the <script> section
     function updateClockTextShadow(event) {
@@ -60,12 +61,33 @@
         manualTime = value;
     }
 
+    async function loadFolders() {
+        folders = await fetchVideoFolders();
+    }
+
+    function updateSelectedFolders(event, folder) {
+        console.log("updateSelectedFolders");
+        let selectedArray = selected.length > 0 ? selected.split(",") : [];
+
+        if (event.target.checked) {
+            selectedArray.push(folder);
+        } else {
+            selectedArray = selectedArray.filter((f) => f !== folder);
+        }
+
+        selected = selectedArray.join(",");
+        localStorage.setItem("selectedFolders", selected);
+        fetchVideos(selectedArray.length > 0 ? selectedArray : null);
+    }
 
     onMount(() => {
+        loadFolders();
+
         const savedOverriddenClockTime = localStorage.getItem("overriddenClockTime");
         const savedClockTextShadow = localStorage.getItem("clockTextShadow");
         const savedVideoFadeOutTime = localStorage.getItem("videoFadeOutTime");
         const savedTimeBetweenVideos = localStorage.getItem("timeBetweenVideos");
+        const savedSelectedFolders = localStorage.getItem("selectedFolders");
 
         if (savedOverriddenClockTime !== null && savedOverriddenClockTime !== 'null') {
             const savedDate = new Date(savedOverriddenClockTime);
@@ -81,9 +103,10 @@
         if (savedTimeBetweenVideos) {
             $timeBetweenVideos = parseFloat(savedTimeBetweenVideos);
         }
+        if (savedSelectedFolders) {
+            selected = savedSelectedFolders;
+        }
     });
-
-
 
     // Subscribe to the videoFiles store
     const unsubscribe = videoFiles.subscribe((value) => {
@@ -226,6 +249,15 @@
             </label>
             <br/>
             <button on:click={fetchVideos}>Refresh Videos</button>
+            <br/>
+            <div>
+                <h4>Select video folders (All will play if none selected):</h4>
+                {#each folders as folder}
+                    <label class="setting-label">
+                        <input type="checkbox" checked="{selected.includes(folder)}" on:change="{(event) => updateSelectedFolders(event, folder)}" /> {folder}
+                    </label>
+                {/each}
+            </div>
             <br/>
             <p>Number of videos: {videos.length}</p>
             <label class="setting-label">

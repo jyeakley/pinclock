@@ -3,7 +3,6 @@
     import { onMount } from 'svelte';
     import {onDestroy} from "svelte";
     export let videoIndex;
-    // export let showBlackBackground;
     export let randomizeVideos;
     let videos;
 
