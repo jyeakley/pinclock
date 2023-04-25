@@ -5,6 +5,7 @@
     export let videoIndex;
     export let randomizeVideos;
     let videos;
+    let timeoutId;
 
     onMount(() => {
         const savedVideoFadeOutTime = localStorage.getItem("videoFadeOutTime");
@@ -53,7 +54,8 @@
 
         $showBlackBackground = false;
 
-        setTimeout(changeBackground, $videoPlayTime * 1000);
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(changeBackground, $videoPlayTime * 1000);
     }
 
     // Subscribe to the videoFiles store
