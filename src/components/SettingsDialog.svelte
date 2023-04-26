@@ -1,6 +1,6 @@
 <script>
     import {videoFiles, videoFadeOutTime, timeBetweenVideos, videoPlayTime} from '../videoStore.js';
-    import {overriddenClockTime, clockTextShadow} from '../store.js';
+    import {overriddenClockTime, clockTextShadow, clockSeparatorBlinkSpeed} from '../store.js';
     import {fontOptions, formatOptions} from '../settings/clockSettings.js'
     import {addVideosFromSource, clearVideos, fetchVideos, fetchVideoFolders} from '../services/videoService.js';
     import {onDestroy, onMount} from "svelte";
@@ -26,6 +26,12 @@
     let manualTime = "";
     let folders = [];
     let selected = "";
+
+    function updateClockSeparatorBlinkSpeed(event) {
+        const blinkValue = parseFloat(event.target.value);
+        $clockSeparatorBlinkSpeed = blinkValue;
+        localStorage.setItem("clockSeparatorBlinkSpeed", $clockSeparatorBlinkSpeed);
+    }
 
     // Add this function in the <script> section
     function updateClockTextShadow(event) {
@@ -87,6 +93,7 @@
         const savedVideoFadeOutTime = localStorage.getItem("videoFadeOutTime");
         const savedTimeBetweenVideos = localStorage.getItem("timeBetweenVideos");
         const savedSelectedFolders = localStorage.getItem("selectedFolders");
+        const savedClockSeparatorBlinkSpeed = localStorage.getItem("clockSeparatorBlinkSpeed");
 
         if (savedOverriddenClockTime !== null && savedOverriddenClockTime !== 'null') {
             const savedDate = new Date(savedOverriddenClockTime);
@@ -104,6 +111,9 @@
         }
         if (savedSelectedFolders) {
             selected = savedSelectedFolders;
+        }
+        if (savedClockSeparatorBlinkSpeed) {
+            $clockSeparatorBlinkSpeed = parseFloat(savedClockSeparatorBlinkSpeed);
         }
     });
 
@@ -203,6 +213,11 @@
             <label class="setting-label">
                 Clock text shadow:
                 <input type="range" min="0" max="30" bind:value={$clockTextShadow} on:change="{updateClockTextShadow}"/>
+            </label>
+            <br/>
+            <label class="setting-label">
+                Clock separator blink speed (0 for solid, 1 for default, higher for slower):
+                <input type="range" min="0" step=".1" max="5" bind:value={$clockSeparatorBlinkSpeed} on:change="{updateClockSeparatorBlinkSpeed}"/>
             </label>
             <br/>
             <label class="setting-label">
