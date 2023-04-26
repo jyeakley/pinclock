@@ -1,4 +1,8 @@
 @font-face {
+    font-family: "Alarm Clock";
+    src: url("/fonts/alarm-clock/alarm_clock.ttf") format("truetype");
+}
+@font-face {
     font-family: "Arcade";
     src: url("/fonts/arcade/ARCADE.TTF") format("truetype");
 }
@@ -51,6 +55,10 @@
     src: url("/fonts/arcades/Arcades.ttf") format("truetype");
 }
 @font-face {
+    font-family: "Atomic Clock";
+    src: url("/fonts/atomic-clock/ATOMICCLOCKRADIO.TTF") format("truetype");
+}
+@font-face {
     font-family: "Barcade";
     src: url("/fonts/barcade/barcade.ttf") format("truetype");
 }
@@ -61,6 +69,22 @@
 @font-face {
     font-family: "Digital Arcade";
     src: url("/fonts/digital-arcade/DigitalArcade.ttf") format("truetype");
+}
+@font-face {
+    font-family: "Flip Clock Black";
+    src: url("/fonts/flip-clock/FLIPclockblack.ttf") format("truetype");
+}
+@font-face {
+    font-family: "Flip Clock White";
+    src: url("/fonts/flip-clock/FLIPclockwhite.ttf") format("truetype");
+}
+@font-face {
+    font-family: "Gameboy";
+    src: url("/fonts/gameboy/GameBoy.ttf") format("truetype");
+}
+@font-face {
+    font-family: "Graffiti";
+    src: url("/fonts/graffiti/Graffiti.ttf") format("truetype");
 }
 @font-face {
     font-family: "Karmatic Arcade";
@@ -77,6 +101,10 @@
 @font-face {
     font-family: "PinBall";
     src: url("/fonts/pinball/OPTIPinBall.otf") format("truetype");
+}
+@font-face {
+    font-family: "Pinballer";
+    src: url("/fonts/pinballer/Pinballer.ttf") format("truetype");
 }
 @font-face {
     font-family: "Sega Arcade";
