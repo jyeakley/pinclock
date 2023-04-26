@@ -5,8 +5,7 @@
     import Clock from "../components/Clock.svelte";
     import VideoPlayer from "../components/VideoPlayer.svelte";
     import SettingsDialog from "../components/SettingsDialog.svelte"
-    import { clockFont, clockFormat } from './../store.js';
-    import { clockPositionX, clockPositionY } from './../store.js';
+    import { clockPositionX, clockPositionY, clockFont, clockFormat } from './../store.js';
     import { writable } from "svelte/store";
     import { onDestroy } from 'svelte';
 
@@ -28,61 +27,7 @@
     // Unsubscribe from the store when the component is destroyed
     onDestroy(unsubscribe);
 
-    const fontOptions = [
-        { label: "Aileron", value: "Aileron" },
-        { label: "Arcade", value: "Arcade" },
-        { label: "Arcade Alternate", value: "Arcade Alternate" },
-        { label: "Arcade Book", value: "Arcade Book" },
-        { label: "Arcade Classic", value: "Arcade Classic" },
-        { label: "Arcade Future", value: "Arcade Future" },
-        { label: "Arcade Nightmare", value: "Arcade Nightmare" },
-        { label: "Aracde v0.1", value: "Aracde v0.1" },
-        { label: "ARCADE I", value: "ARCADE I" },
-        { label: "ARCADE N", value: "ARCADE N" },
-        { label: "ARCADE R", value: "ARCADE R" },
-        { label: "Arcade Pix", value: "Arcade Pix" },
-        { label: "Arcadepix Plus", value: "Arcadepix Plus" },
-        { label: "Arcades", value: "Arcades" },
-        { label: "Arial", value: "Arial" },
-        { label: "Barcade", value: "Barcade" },
-        { label: "Black Arcade", value: "Black Arcade" },
-        { label: "Century Gothic", value: "Century Gothic" },
-        { label: "Comfortaa", value: "Comfortaa" },
-        { label: "Courier New", value: "Courier New" },
-        { label: "Digital Arcade", value: "Digital Arcade" },
-        { label: "Exo", value: "Exo" },
-        { label: "Futura", value: "Futura" },
-        { label: "Gotham", value: "Gotham" },
-        { label: "Helvetica", value: "Helvetica" },
-        { label: "Helvetica Neue", value: "Helvetica Neue" },
-        { label: "Inter", value: "Inter" },
-        { label: "Josefin Sans", value: "Josefin Sans" },
-        { label: "Karmatic Arcade", value: "Karmatic Arcade" },
-        { label: "Lato", value: "Lato" },
-        { label: "Montserrat", value: "Montserrat" },
-        { label: "New Arcade", value: "New Arcade" },
-        { label: "Nunito", value: "Nunito" },
-        { label: "Open Sans", value: "Open Sans" },
-        { label: "Our Arcade Games", value: "Our Arcade Games" },
-        { label: "Oswald", value: "Oswald" },
-        { label: "PinBall", value: "PinBall" },
-        { label: "Poppins", value: "Poppins" },
-        { label: "PT Sans", value: "PT Sans" },
-        { label: "Raleway", value: "Raleway" },
-        { label: "Roboto", value: "Roboto" },
-        { label: "Sega Arcade", value: "Sega Arcade" },
-        { label: "Source Sans Pro", value: "Source Sans Pro" },
-        { label: "Times New Roman", value: "Times New Roman" },
-        { label: "Titillium Web", value: "Titillium Web" },
-        { label: "Ubuntu", value: "Ubuntu" },
-        { label: "Varela Round", value: "Varela Round" },
-        { label: "Verdana", value: "Verdana" },
-        { label: "Work Sans", value: "Work Sans" },
-        { label: "Yantramanav", value: "Yantramanav" },
-        { label: "Zilla Slab", value: "Zilla Slab" }
-    ]
-
-            function updateClockFontSize(event) {
+    function updateClockFontSize(event) {
         clockFontSize = event.target.value + 'px';
         localStorage.setItem('clockFontSize', clockFontSize);
     }
@@ -166,24 +111,6 @@
         localStorage.setItem('clockFont', $clockFont);
     }
 
-    const formatOptions = [
-        { label: 'HH:mm:ss', value: { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false } },
-        { label: 'HH:mm', value: { hour: '2-digit', minute: '2-digit', hour12: false } },
-        { label: 'h:mm:ss a', value: { hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true } },
-        { label: 'h:mm a', value: { hour: 'numeric', minute: '2-digit', hour12: true } },
-        { label: 'EEEE HH:mm:ss', value: { weekday: 'long', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false } },
-        { label: 'EEEE HH:mm', value: { weekday: 'long', hour: '2-digit', minute: '2-digit', hour12: false } },
-        { label: 'EEE h:mm:ss a', value: { weekday: 'short', hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true } },
-        { label: 'EEE h:mm a', value: { weekday: 'short', hour: 'numeric', minute: '2-digit', hour12: true } },
-        { label: 'HH:mm', value: { hour: '2-digit', minute: '2-digit', hour12: false } },
-        { label: 'hh:mm a', value: { hour: '2-digit', minute: '2-digit', hour12: true } },
-        { label: 'H:mm:ss', value: { hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: false } },
-        { label: 'h:mm:ss.SSS a', value: { hour: 'numeric', minute: '2-digit', second: '2-digit', fractionalSecondDigits: 3, hour12: true } },
-        { label: 'hh:mm:ss a', value: { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true } },
-        { label: 'HH:mm:ss z', value: { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZoneName: 'short', hour12: false } },
-    ];
-
-
     function updateClockFormat(event) {
         const selectedFormat = JSON.parse(event.target.value);
         $clockFormat = selectedFormat;
@@ -192,94 +119,6 @@
         clockFormatLabel = selectedFormat.label
     }
 </script>
-
-<style>
-    @font-face {
-        font-family: "Arcade";
-        src: url("/fonts/arcade/ARCADE.TTF") format("truetype");
-    }
-    @font-face {
-        font-family: "Arcade Alternate";
-        src: url("/fonts/arcade-alternate/ArcadeAlternate.ttf") format("truetype");
-    }
-    @font-face {
-        font-family: "Arcade Book";
-        src: url("/fonts/arcade-book/Arcade Book.ttf") format("truetype");
-    }
-    @font-face {
-        font-family: "Arcade Classic";
-        src: url("/fonts/arcade-classic/Arcade Classic.ttf") format("truetype");
-    }
-    @font-face {
-        font-family: "Arcade Future";
-        src: url("/fonts/arcade-future/Arcade Future.otf") format("truetype");
-    }
-    @font-face {
-        font-family: "Aracde v0.1";
-        src: url("/fonts/arcade-heliumdream/ARCADE_v0.1.ttf") format("truetype");
-    }
-    @font-face {
-        font-family: "Arcade Nightmare";
-        src: url("/fonts/arcade-nightmare/arcade_nightmare.ttf") format("truetype");
-    }
-    @font-face {
-        font-family: "ARCADE I";
-        src: url("/fonts/arcade-yuji-adachi/ARCADE_I.TTF") format("truetype");
-    }
-    @font-face {
-        font-family: "ARCADE N";
-        src: url("/fonts/arcade-yuji-adachi/ARCADE_N.TTF") format("truetype");
-    }
-    @font-face {
-        font-family: "ARCADE R";
-        src: url("/fonts/arcade-yuji-adachi/ARCADE_R.TTF") format("truetype");
-    }
-    @font-face {
-        font-family: "Arcade Pix";
-        src: url("/fonts/arcadepix/ARCADEPI.TTF") format("truetype");
-    }
-    @font-face {
-        font-family: "Arcadepix Plus";
-        src: url("/fonts/arcadepix-plus/Arcadepix Plus.ttf") format("truetype");
-    }
-    @font-face {
-        font-family: "Arcades";
-        src: url("/fonts/arcades/Arcades.ttf") format("truetype");
-    }
-    @font-face {
-        font-family: "Barcade";
-        src: url("/fonts/barcade/barcade.ttf") format("truetype");
-    }
-    @font-face {
-        font-family: "Black Arcade";
-        src: url("/fonts/black-arcade/Black Arcade Free.otf") format("truetype");
-    }
-    @font-face {
-        font-family: "Digital Arcade";
-        src: url("/fonts/digital-arcade/DigitalArcade.ttf") format("truetype");
-    }
-    @font-face {
-        font-family: "Karmatic Arcade";
-        src: url("/fonts/karmatic-arcade/ka1.ttf") format("truetype");
-    }
-    @font-face {
-        font-family: "New Arcade";
-        src: url("/fonts/new-arcades/NewArcades.ttf") format("truetype");
-    }
-    @font-face {
-        font-family: "Our Arcade Games";
-        src: url("/fonts/our-arcade-games/Our-Arcade-Games.ttf") format("truetype");
-    }
-    @font-face {
-        font-family: "PinBall";
-        src: url("/fonts/pinball/OPTIPinBall.otf") format("truetype");
-    }
-    @font-face {
-        font-family: "Sega Arcade";
-        src: url("/fonts/sega-arcade/SegaArcadeFont-Regular.ttf") format("truetype");
-    }
-
-</style>
 
 <VideoPlayer {videoIndex} {randomizeVideos} />
 
@@ -298,10 +137,8 @@
 <SettingsDialog
         {showDialog}
         {updateClockFont}
-        {fontOptions}
         {clockFont}
         {updateClockFormat}
-        {formatOptions}
         {clockColor}
         {updateClockColor}
         {clockFontSize}

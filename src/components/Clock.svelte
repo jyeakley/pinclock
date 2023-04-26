@@ -41,8 +41,6 @@
             }
         });
     }
-
-
     function tick() {
         if (!$overriddenClockTime) {
             time = new Date();
@@ -53,6 +51,7 @@
 </script>
 
 <style>
+    @import "./font-faces.css";
     .clock {
         font-size: 48px;
         text-align: center;

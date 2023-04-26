@@ -1,0 +1,84 @@
+@font-face {
+    font-family: "Arcade";
+    src: url("/fonts/arcade/ARCADE.TTF") format("truetype");
+}
+@font-face {
+    font-family: "Arcade Alternate";
+    src: url("/fonts/arcade-alternate/ArcadeAlternate.ttf") format("truetype");
+}
+@font-face {
+    font-family: "Arcade Book";
+    src: url("/fonts/arcade-book/Arcade Book.ttf") format("truetype");
+}
+@font-face {
+    font-family: "Arcade Classic";
+    src: url("/fonts/arcade-classic/Arcade Classic.ttf") format("truetype");
+}
+@font-face {
+    font-family: "Arcade Future";
+    src: url("/fonts/arcade-future/Arcade Future.otf") format("truetype");
+}
+@font-face {
+    font-family: "Aracde v0.1";
+    src: url("/fonts/arcade-heliumdream/ARCADE_v0.1.ttf") format("truetype");
+}
+@font-face {
+    font-family: "Arcade Nightmare";
+    src: url("/fonts/arcade-nightmare/arcade_nightmare.ttf") format("truetype");
+}
+@font-face {
+    font-family: "ARCADE I";
+    src: url("/fonts/arcade-yuji-adachi/ARCADE_I.TTF") format("truetype");
+}
+@font-face {
+    font-family: "ARCADE N";
+    src: url("/fonts/arcade-yuji-adachi/ARCADE_N.TTF") format("truetype");
+}
+@font-face {
+    font-family: "ARCADE R";
+    src: url("/fonts/arcade-yuji-adachi/ARCADE_R.TTF") format("truetype");
+}
+@font-face {
+    font-family: "Arcade Pix";
+    src: url("/fonts/arcadepix/ARCADEPI.TTF") format("truetype");
+}
+@font-face {
+    font-family: "Arcadepix Plus";
+    src: url("/fonts/arcadepix-plus/Arcadepix Plus.ttf") format("truetype");
+}
+@font-face {
+    font-family: "Arcades";
+    src: url("/fonts/arcades/Arcades.ttf") format("truetype");
+}
+@font-face {
+    font-family: "Barcade";
+    src: url("/fonts/barcade/barcade.ttf") format("truetype");
+}
+@font-face {
+    font-family: "Black Arcade";
+    src: url("/fonts/black-arcade/Black Arcade Free.otf") format("truetype");
+}
+@font-face {
+    font-family: "Digital Arcade";
+    src: url("/fonts/digital-arcade/DigitalArcade.ttf") format("truetype");
+}
+@font-face {
+    font-family: "Karmatic Arcade";
+    src: url("/fonts/karmatic-arcade/ka1.ttf") format("truetype");
+}
+@font-face {
+    font-family: "New Arcade";
+    src: url("/fonts/new-arcades/NewArcades.ttf") format("truetype");
+}
+@font-face {
+    font-family: "Our Arcade Games";
+    src: url("/fonts/our-arcade-games/Our-Arcade-Games.ttf") format("truetype");
+}
+@font-face {
+    font-family: "PinBall";
+    src: url("/fonts/pinball/OPTIPinBall.otf") format("truetype");
+}
+@font-face {
+    font-family: "Sega Arcade";
+    src: url("/fonts/sega-arcade/SegaArcadeFont-Regular.ttf") format("truetype");
+}

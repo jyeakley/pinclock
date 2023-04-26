@@ -1,15 +1,14 @@
 <script>
     import {videoFiles, videoFadeOutTime, timeBetweenVideos, videoPlayTime} from '../videoStore.js';
     import {overriddenClockTime, clockTextShadow} from '../store.js';
+    import {fontOptions, formatOptions} from '../settings/clockSettings.js'
     import {addVideosFromSource, clearVideos, fetchVideos, fetchVideoFolders} from '../services/videoService.js';
     import {onDestroy, onMount} from "svelte";
 
     export let showDialog;
     export let updateClockFont;
-    export let fontOptions;
     export let clockFont;
     export let updateClockFormat;
-    export let formatOptions;
     export let clockColor;
     export let updateClockColor;
     export let clockFontSize;
