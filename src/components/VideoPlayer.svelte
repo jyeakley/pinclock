@@ -48,6 +48,7 @@
         videoElement.src = `/videos/${encodeURIComponent(videos[videoIndex])}`;
         videoElement.style.transition = `opacity ${$videoFadeOutTime}s`;
         videoElement.style.opacity = 0;
+        videoElement.currentTime = 0;
         videoElement.play();
         await new Promise((resolve) => setTimeout(resolve, $timeBetweenVideos * 1000));
         videoElement.style.opacity = 1;
@@ -56,16 +57,11 @@
 
         clearTimeout(timeoutId);
 
-        if ($videoPlayTime === 0){
-            if (videoElement.duration < 120){ // 2 minute video max
-                timeoutId = setTimeout(changeBackground, videoElement.duration * 1000);
-            }else{
-                timeoutId = setTimeout(changeBackground, 120000);
-            }
-        }else{
-            timeoutId = setTimeout(changeBackground, $videoPlayTime * 1000);
-        }
-
+        const videoDuration = videoElement.duration;
+        const maxDuration = 120; // 2 minute video max
+        const timeToPlay = $videoPlayTime === 0 ? maxDuration : $videoPlayTime;
+        const timeoutDuration = Math.min(videoDuration, timeToPlay) * 1000;
+        timeoutId = setTimeout(changeBackground, timeoutDuration);
     }
 
     // Subscribe to the videoFiles store
