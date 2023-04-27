@@ -26,6 +26,40 @@
     let manualTime = "";
     let folders = [];
     let selected = "";
+    let isResizing = false;
+    let startX, startY, startWidth, startHeight;
+
+    function resize(e) {
+        if (!isResizing) return;
+
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+
+        const newWidth = startWidth + dx;
+        const newHeight = startHeight + dy;
+
+        const settingsElement = document.querySelector(".settings");
+        settingsElement.style.width = `${newWidth}px`;
+        settingsElement.style.height = `${newHeight}px`;
+    }
+
+    function handleResizeMouseDown(e) {
+        e.preventDefault();
+
+        isResizing = true;
+        startX = e.clientX;
+        startY = e.clientY;
+
+        const settingsElement = document.querySelector(".settings");
+        startWidth = parseInt(
+            document.defaultView.getComputedStyle(settingsElement).width,
+            10
+        );
+        startHeight = parseInt(
+            document.defaultView.getComputedStyle(settingsElement).height,
+            10
+        );
+    }
 
     function updateClockSeparatorBlinkSpeed(event) {
         const blinkValue = parseFloat(event.target.value);
@@ -115,6 +149,10 @@
         if (savedClockSeparatorBlinkSpeed) {
             $clockSeparatorBlinkSpeed = parseFloat(savedClockSeparatorBlinkSpeed);
         }
+        if (typeof window !== "undefined") {
+            window.addEventListener("mousemove", resize);
+            window.addEventListener("mouseup", () => (isResizing = false));
+        }
     });
 
     // Subscribe to the videoFiles store
@@ -124,6 +162,12 @@
 
     // Unsubscribe from the store when the component is destroyed
     onDestroy(unsubscribe);
+    onDestroy(() => {
+        if (typeof window !== "undefined") {
+            window.removeEventListener("mousemove", resize);
+            window.removeEventListener("mouseup", () => (isResizing = false));
+        }
+    });
 </script>
 
 <style>
@@ -161,8 +205,6 @@
             height: 100vh;
         }
     }
-
-
     .settings-container {
         display: flex;
         flex-direction: column;
@@ -176,10 +218,21 @@
     .settings select {
         margin-left: 0.5rem;
     }
+    .resize-handle {
+        background-color: rgba(0, 0, 0, 0.2);
+        width: 10px;
+        height: 10px;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        cursor: nwse-resize;
+        user-select: none;
+    }
 </style>
 
 {#if showDialog}
     <div class="settings" on:stopPropagation>
+        <div class="resize-handle" on:mousedown="{handleResizeMouseDown}"></div>
         <div class="settings-container">
             <label class="setting-label">
                 Clock font:
