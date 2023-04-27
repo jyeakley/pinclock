@@ -52,8 +52,14 @@
             videoElement.currentTime = 0;
         });
         await new Promise((resolve) => setTimeout(resolve, $timeBetweenVideos * 1000));
-        videoElement.play(); // Move this line here
+        videoElement.play();
         videoElement.style.opacity = 1;
+
+        // Add this event listener to handle the video end event
+        videoElement.onended = () => {
+            clearTimeout(timeoutId);
+            changeBackground();
+        };
 
         $showBlackBackground = false;
 
@@ -112,11 +118,8 @@
             id="background-video"
             class="background"
             src="/videos/{videos[videoIndex]}"
-            loop
             muted
             preload="metadata"
-            on:ended={changeBackground}
     ></video>
-
 {/if}
 <div class="black-background" class:show="{$showBlackBackground}"></div>
