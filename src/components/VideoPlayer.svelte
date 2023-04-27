@@ -50,9 +50,9 @@
         videoElement.style.opacity = 0;
         videoElement.addEventListener('loadedmetadata', () => {
             videoElement.currentTime = 0;
-            videoElement.play();
         });
         await new Promise((resolve) => setTimeout(resolve, $timeBetweenVideos * 1000));
+        videoElement.play(); // Move this line here
         videoElement.style.opacity = 1;
 
         $showBlackBackground = false;
