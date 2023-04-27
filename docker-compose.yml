@@ -16,10 +16,12 @@ services:
       dockerfile: Dockerfile
     image: pinclock:latest
     environment:
-      - SOURCE_PATH=/media/justin/pinclock/videos
+      - SOURCE_PATH=${MEDIA_HOME}/pinclock/videos
+    env_file:
+      - .env
     volumes:
       - videos:/static/videos
-      - /media/justin:/media/justin
+      - ${MEDIA_HOME}:${MEDIA_HOME}
     ports:
       - 3001:3001
     command: node api/server.js
