@@ -65,6 +65,10 @@
         z-index: 1;
         position: relative;
     }
+    .clock span {
+        display: inline-block;
+        margin: 0;
+    }
     .blink {
         animation-name: blink;
         animation-timing-function: linear;
@@ -87,10 +91,11 @@
 
 <div class="clock" style="font-family: {$clockFont}; color: {clockColor}; font-size: {clockFontSize}; margin-top: {$clockPositionY}px; margin-left: {$clockPositionX}px; text-shadow: 0 {$clockTextShadow}px {$clockTextShadow}px rgba(0, 0, 0, 0.5);">
     {#each parts as part, index}
-        {part}
-        {#if index < parts.length - 1}
-            <span class="blink" style="animation-duration: {$clockSeparatorBlinkSpeed}s;">:</span>
-        {/if}
+        <span class="time-part">{part}</span><!--
+        -->{#if index < parts.length - 1}
+        <span class="blink" style="animation-duration: {$clockSeparatorBlinkSpeed}s;">:</span>
+    {/if}
     {/each}
 </div>
+
 
