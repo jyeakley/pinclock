@@ -311,8 +311,8 @@
             </label>
             <br/>
             <label class="setting-label">
-                Video Play Time (seconds, Default: 5):
-                <input type="number" min="1" step="1" bind:value={$videoPlayTime} on:change="{updateVideoPlayTime}"/>
+                Video Play Time Override. 0 indicates natural length capped at 120s. (seconds, Default: 0):
+                <input type="number" min="0" step="1" bind:value={$videoPlayTime} on:change="{updateVideoPlayTime}"/>
             </label>
             <br/>
             <button on:click={fetchVideos}>Refresh Videos</button>

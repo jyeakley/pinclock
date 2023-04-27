@@ -4,4 +4,4 @@ export const videoFiles = writable([]);
 export const showBlackBackground = writable(true);
 export const videoFadeOutTime = writable(0);
 export const timeBetweenVideos = writable(3);
-export const videoPlayTime = writable(5);
+export const videoPlayTime = writable(0);

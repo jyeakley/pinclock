@@ -55,7 +55,17 @@
         $showBlackBackground = false;
 
         clearTimeout(timeoutId);
-        timeoutId = setTimeout(changeBackground, $videoPlayTime * 1000);
+
+        if ($videoPlayTime === 0){
+            if (videoElement.duration < 120){ // 2 minute video max
+                timeoutId = setTimeout(changeBackground, videoElement.duration * 1000);
+            }else{
+                timeoutId = setTimeout(changeBackground, 120000);
+            }
+        }else{
+            timeoutId = setTimeout(changeBackground, $videoPlayTime * 1000);
+        }
+
     }
 
     // Subscribe to the videoFiles store
