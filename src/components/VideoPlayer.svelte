@@ -48,8 +48,10 @@
         videoElement.src = `/videos/${encodeURIComponent(videos[videoIndex])}`;
         videoElement.style.transition = `opacity ${$videoFadeOutTime}s`;
         videoElement.style.opacity = 0;
-        videoElement.currentTime = 0;
-        videoElement.play();
+        videoElement.addEventListener('loadedmetadata', () => {
+            videoElement.currentTime = 0;
+            videoElement.play();
+        });
         await new Promise((resolve) => setTimeout(resolve, $timeBetweenVideos * 1000));
         videoElement.style.opacity = 1;
 
@@ -110,10 +112,11 @@
             id="background-video"
             class="background"
             src="/videos/{videos[videoIndex]}"
-            autoplay
             loop
             muted
+            preload="metadata"
             on:ended={changeBackground}
     ></video>
+
 {/if}
 <div class="black-background" class:show="{$showBlackBackground}"></div>
