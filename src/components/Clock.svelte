@@ -8,23 +8,37 @@
     export let clockPositionX;
     export let clockPositionY;
     export let clockFormat;
-    export let enableScreensaver = false;
+    export let enableScreensaver;
     let movementState;
     let interval;
-    let moveInterval;
     let time;
     let parts = [];
     let cleanupUnsubscribe;
     let screensaverClockPositionY;
     let screensaverClockPositionX;
+    let stopMoving = false;
+    let speedX = 1; // Set the desired speed in the x direction
+    let speedY = 1; // Set the desired speed in the y direction
 
     $: {
         if (time) {
             parts = time.toLocaleTimeString('en-US', $clockFormat).split(':');
         }
+        if (enableScreensaver) {
+            if (!movementState) {
+                updateMovementState();
+                stopMoving = false;
+                requestAnimationFrame(updateClockPosition);
+            }
+        } else {
+            stopMoving = true;
+            movementState = null;
+        }
     }
 
     function updateClockPosition() {
+        if (stopMoving) return;
+
         const clockElement = document.querySelector('.clock');
         const clockRect = clockElement.getBoundingClientRect();
         const windowHeight = window.innerHeight;
@@ -53,12 +67,14 @@
         requestAnimationFrame(updateClockPosition);
     }
 
+
     function updateMovementState() {
         movementState = {
-            x: (Math.random() * 2 - 1) * 1,
-            y: (Math.random() * 2 - 1) * 1,
+            x: (1 * 2 - 1) * speedX,
+            y: (1 * 2 - 1) * speedY,
         };
     }
+
 
     onMount(() => {
         interval = setInterval(tick, 1000);
@@ -67,6 +83,15 @@
         if (typeof window !== 'undefined') {
             const savedScreensaverClockPositionY = localStorage.getItem("screensaverClockPositionY");
             const savedScreensaverClockPositionX = localStorage.getItem("screensaverClockPositionX");
+            const savedSpeedX = localStorage.getItem("speedX");
+            const savedSpeedY = localStorage.getItem("speedY");
+
+            if (savedSpeedX !== null) {
+                speedX = parseFloat(savedSpeedX);
+            }
+            if (savedSpeedY !== null) {
+                speedY = parseFloat(savedSpeedY);
+            }
 
             if (savedScreensaverClockPositionY !== null) {
                 screensaverClockPositionY = parseFloat(savedScreensaverClockPositionY);
@@ -81,14 +106,6 @@
         if (savedClockTextShadow) {
             $clockTextShadow = parseInt(savedClockTextShadow);
         }
-        if (enableScreensaver) {
-            movementState = { x: 1, y: 1 };
-            interval = setInterval(tick, 1000);
-            requestAnimationFrame(updateClockPosition);
-        } else {
-            interval = setInterval(tick, 1000);
-        }
-
         cleanupUnsubscribe = overriddenClockTime.subscribe((value) => {
             time = value || new Date();
         });
@@ -100,14 +117,13 @@
             const clockElement = document.querySelector(".clock");
             localStorage.setItem("screensaverClockPositionY", clockElement.style.marginTop);
             localStorage.setItem("screensaverClockPositionX", clockElement.style.marginLeft);
+            localStorage.setItem("speedX", speedX);
+            localStorage.setItem("speedY", speedY);
         }
         if (typeof cleanupUnsubscribe === 'function') {
             cleanupUnsubscribe();
         }
         clearInterval(interval);
-        if(moveInterval){
-            clearInterval(moveInterval); // Use moveInterval instead of interval
-        }
     });
 
     const unsubscribe = overriddenClockTime.subscribe((value) => {

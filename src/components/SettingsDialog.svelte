@@ -1,8 +1,8 @@
 <script>
-    import {videoFiles, videoFadeOutTime, timeBetweenVideos, videoPlayTime} from '../videoStore.js';
-    import {overriddenClockTime, clockTextShadow, clockSeparatorBlinkSpeed} from '../store.js';
+    import {timeBetweenVideos, videoFadeOutTime, videoFiles, videoPlayTime} from '../videoStore.js';
+    import {clockSeparatorBlinkSpeed, clockTextShadow, overriddenClockTime} from '../store.js';
     import {fontOptions, formatOptions} from '../settings/clockSettings.js'
-    import {addVideosFromSource, clearVideos, fetchVideos, fetchVideoFolders} from '../services/videoService.js';
+    import {addVideosFromSource, clearVideos, fetchVideoFolders, fetchVideos} from '../services/videoService.js';
     import {onDestroy, onMount} from "svelte";
 
     export let showDialog;
@@ -22,6 +22,9 @@
     export let showClock;
     export let updateRandomizeVideos;
     export let updateClockFontSize;
+    export let enableScreensaver
+    export let updateScreensaverMode
+
     let videos;
     let manualTime = "";
     let folders = [];
@@ -299,6 +302,11 @@
             <label class="setting-label">
                 Always show clock:
                 <input type="checkbox" checked="{showClock}" on:change="{updateClockVisibility}"/>
+            </label>
+            <br/>
+            <label class="setting-label">
+                Clock "Screensaver" Mode (moves around screen):
+                <input type="checkbox" checked="{enableScreensaver}" on:change="{updateScreensaverMode}"/>
             </label>
             <br/>
             <label class="setting-label">
