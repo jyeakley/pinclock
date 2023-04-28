@@ -292,13 +292,13 @@
             <br/>
             <label class="setting-label">
                 Clock position X:
-                <input type="range" min="-1500" max="1500" value={$clockPositionX} on:change={updateClockPositionX}/>
+                <input type="range" min="-1500" step="50" max="1500" value={$clockPositionX} on:change={updateClockPositionX}/>
 
             </label>
             <br/>
             <label class="setting-label">
                 Clock position Y:
-                <input type="range" min="-1500" max="1000" value={$clockPositionY} on:change={updateClockPositionY}/>
+                <input type="range" min="-1500" step="50" max="1000" value={$clockPositionY} on:change={updateClockPositionY}/>
             </label>
             <br/>
             <label class="setting-label">
