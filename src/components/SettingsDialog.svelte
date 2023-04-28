@@ -158,7 +158,7 @@
     // Subscribe to the videoFiles store
     const unsubscribe = videoFiles.subscribe((value) => {
         videos = value;
-        loadFolders();
+        // loadFolders();
     });
 
     // Unsubscribe from the store when the component is destroyed
