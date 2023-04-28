@@ -24,6 +24,8 @@
     export let updateClockFontSize;
     export let enableScreensaver
     export let updateScreensaverMode
+    export let screensaverSpeed;
+    export let updateScreensaverSpeed;
 
     let videos;
     let manualTime = "";
@@ -307,6 +309,11 @@
             <label class="setting-label">
                 Clock "Screensaver" Mode (moves around screen):
                 <input type="checkbox" checked="{enableScreensaver}" on:change="{updateScreensaverMode}"/>
+            </label>
+            <br/>
+            <label class="setting-label">
+                Screensaver Speed:
+                <input type="range" min="0.5" step=".1" max="5" bind:value={screensaverSpeed} on:change="{updateScreensaverSpeed}"/>
             </label>
             <br/>
             <label class="setting-label">

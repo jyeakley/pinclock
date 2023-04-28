@@ -19,6 +19,7 @@
     let showClock = true;
     let videos;
     let enableScreensaver = false;
+    let screensaverSpeed = 1;
 
     // Subscribe to the videoFiles store
     const unsubscribe = videoFiles.subscribe((value) => {
@@ -69,6 +70,7 @@
         const savedRandomizeVideos = localStorage.getItem("randomizeVideos");
         const savedSelectedFolders = localStorage.getItem("selectedFolders");
         const savedScreensaverMode = localStorage.getItem("screensaverMode");
+        const savedScreensaverSpeed = localStorage.getItem("screensaverSpeed");
 
         if (savedClockFont) {
             $clockFont = savedClockFont;
@@ -102,12 +104,20 @@
         if (savedScreensaverMode) {
             enableScreensaver = savedScreensaverMode === "true";
         }
+        if (savedScreensaverSpeed !== null) {
+            screensaverSpeed = parseFloat(savedScreensaverSpeed);
+        }
         await fetchVideos(savedSelectedFolders ? savedSelectedFolders : []);
     });
 
     function updateScreensaverMode(event) {
         enableScreensaver = event.target.checked;
         localStorage.setItem("screensaverMode", enableScreensaver);
+    }
+
+    function updateScreensaverSpeed(event) {
+        screensaverSpeed = parseFloat(event.target.value);
+        localStorage.setItem('screensaverSpeed', screensaverSpeed);
     }
 
     function updateRandomizeVideos(event) {
@@ -142,6 +152,7 @@
             {clockPositionY}
             {clockFormat}
             {enableScreensaver}
+            {screensaverSpeed}
     />
 {/if}
 
@@ -165,6 +176,8 @@
         {updateClockFontSize}
         {enableScreensaver}
         {updateScreensaverMode}
+        {screensaverSpeed}
+        {updateScreensaverSpeed}
 />
 
 <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;" on:click={toggleDialog} on:keydown={toggleDialog}></div>

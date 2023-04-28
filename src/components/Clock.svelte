@@ -9,6 +9,7 @@
     export let clockPositionY;
     export let clockFormat;
     export let enableScreensaver;
+    export let screensaverSpeed;
     let movementState;
     let interval;
     let time;
@@ -17,8 +18,7 @@
     let screensaverClockPositionY;
     let screensaverClockPositionX;
     let stopMoving = false;
-    let speedX = 1; // Set the desired speed in the x direction
-    let speedY = 1; // Set the desired speed in the y direction
+    let lastScreensaverSpeed;
 
     $: {
         if (time) {
@@ -33,6 +33,10 @@
         } else {
             stopMoving = true;
             movementState = null;
+        }
+        if (lastScreensaverSpeed !== screensaverSpeed){
+            updateMovementState();
+            lastScreensaverSpeed = screensaverSpeed;
         }
     }
 
@@ -70,8 +74,8 @@
 
     function updateMovementState() {
         movementState = {
-            x: (1 * 2 - 1) * speedX,
-            y: (1 * 2 - 1) * speedY,
+            x: (1 * 2 - 1) * screensaverSpeed,
+            y: (1 * 2 - 1) * screensaverSpeed,
         };
     }
 
@@ -83,15 +87,6 @@
         if (typeof window !== 'undefined') {
             const savedScreensaverClockPositionY = localStorage.getItem("screensaverClockPositionY");
             const savedScreensaverClockPositionX = localStorage.getItem("screensaverClockPositionX");
-            const savedSpeedX = localStorage.getItem("speedX");
-            const savedSpeedY = localStorage.getItem("speedY");
-
-            if (savedSpeedX !== null) {
-                speedX = parseFloat(savedSpeedX);
-            }
-            if (savedSpeedY !== null) {
-                speedY = parseFloat(savedSpeedY);
-            }
 
             if (savedScreensaverClockPositionY !== null) {
                 screensaverClockPositionY = parseFloat(savedScreensaverClockPositionY);
@@ -109,6 +104,7 @@
         cleanupUnsubscribe = overriddenClockTime.subscribe((value) => {
             time = value || new Date();
         });
+        lastScreensaverSpeed = screensaverSpeed;
     });
 
     onDestroy(() => {
@@ -117,8 +113,6 @@
             const clockElement = document.querySelector(".clock");
             localStorage.setItem("screensaverClockPositionY", clockElement.style.marginTop);
             localStorage.setItem("screensaverClockPositionX", clockElement.style.marginLeft);
-            localStorage.setItem("speedX", speedX);
-            localStorage.setItem("speedY", speedY);
         }
         if (typeof cleanupUnsubscribe === 'function') {
             cleanupUnsubscribe();
