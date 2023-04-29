@@ -38,7 +38,7 @@
         font-size: .9em;
     }
     .updated {
-        font-size: .25em;
+        font-size: .7em;
         color: grey;
     }
     img.condition-icon {
