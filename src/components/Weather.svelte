@@ -18,7 +18,7 @@
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
         position: relative;
         z-index: 1;
-        width: 15em;
+        width: 12em;
     }
 
     .refresh-icon {
@@ -31,16 +31,16 @@
     }
 
     .location {
-        font-size: 1.5em;
+        font-size: 1em;
         font-weight: bold;
     }
 
     .temperature {
-        font-size: 1.5em;
+        font-size: 1em;
     }
 
     .condition {
-        font-size: 1.25em;
+        font-size: 1em;
     }
 
     img.condition-icon {
