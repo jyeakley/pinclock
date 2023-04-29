@@ -1,8 +1,8 @@
 <script>
     export let weatherData;
-    let location = weatherData.location;
-    let current = weatherData.current;
-    let condition = current.condition;
+    $: location = weatherData.location;
+    $: current = weatherData.current;
+    $: condition = current.condition;
 </script>
 
 <style>
@@ -21,39 +21,45 @@
         width: 12em;
     }
 
-    .refresh-icon {
-        cursor: pointer;
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        width: 24px;
-        height: 24px;
-    }
-
     .location {
         font-size: 1em;
         font-weight: bold;
     }
 
     .temperature {
-        font-size: 1em;
+        font-size: 1.3em;
+    }
+
+    .temperature-feel {
+        font-size: .9em;
     }
 
     .condition {
-        font-size: 1em;
+        font-size: .9em;
     }
-
+    .updated {
+        font-size: .25em;
+        color: grey;
+    }
     img.condition-icon {
-        width: 48px;
-        height: 48px;
+        width: 24px;
+        height: 24px;
     }
 </style>
 
 <div class="weather-container">
     <div class="location">{location.name}, {location.region}, {location.country}</div>
-    <div class="temperature">{current.temp_c}°C / {current.temp_f}°F</div>
     <div class="condition">
-        <img class="condition-icon" src="{condition.icon}" alt="{condition.text}" />
-        {condition.text}
+        <span class="temperature">{current.temp_f}°F
+            <img class="condition-icon" src="{condition.icon}" alt="{condition.text}" />
+            {condition.text}
+        </span>
+
     </div>
+
+    <div class="temperature-feel">Feels Like: {current.feelslike_f}°F</div>
+    <div class="temperature-feel">Wind: {current.wind_mph}mph ({current.wind_dir}) </div>
+
+    <br/>
+    <div class="updated">Last Refresh: {location.localtime}</div>
 </div>
