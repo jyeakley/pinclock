@@ -26,6 +26,12 @@
     export let updateScreensaverMode
     export let screensaverSpeed;
     export let updateScreensaverSpeed;
+    export let weatherAPIKey;
+    export let weatherZipCode;
+    export let alwaysShowWeather;
+    export let updateWeatherAPIKey;
+    export let updateWeatherZipCode;
+    export let updateWeatherAlwaysShow;
 
     let videos;
     let manualTime = "";
@@ -354,6 +360,22 @@
             <label class="setting-label">
                 Clear all videos:
                 <button on:click="{clearVideos}">Clear</button>
+            </label>
+            <br/>
+            <h3>Weather</h3>
+            <label class="setting-label">
+                Weather API Key (weatherapi.com):
+                <input type="text" value="{weatherAPIKey}" on:change="{updateWeatherAPIKey}"/>
+            </label>
+            <br/>
+            <label class="setting-label">
+                Weather ZipCode:
+                <input type="text" value="{weatherZipCode}" on:change="{updateWeatherZipCode}"/>
+            </label>
+            <br/>
+            <label class="setting-label">
+                Always Show Weather:
+                <input type="checkbox" bind:checked={alwaysShowWeather} on:change="{updateWeatherAlwaysShow}"/>
             </label>
             <br/>
         </div>

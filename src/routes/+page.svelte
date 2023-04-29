@@ -1,6 +1,8 @@
 <script>
     import { onMount } from 'svelte';
+    import Weather from '../components/Weather.svelte';
     import { fetchVideos } from '../services/videoService.js';
+    import {fetchWeatherData} from '../services/weatherService.js'
     import { videoFiles, showBlackBackground } from '../videoStore.js';
     import Clock from "../components/Clock.svelte";
     import VideoPlayer from "../components/VideoPlayer.svelte";
@@ -10,7 +12,6 @@
     import { onDestroy } from 'svelte';
 
     const randomizeVideos = writable(false);
-
     let videoIndex = 0;
     let showDialog = false;
     let clockColor = 'white';
@@ -20,6 +21,16 @@
     let videos;
     let enableScreensaver = false;
     let screensaverSpeed = 1;
+    let weatherData = "";
+    let weatherAPIKey = "";
+    let weatherZipCode = "";
+    let alwaysShowWeather = false;
+
+    $: {
+        if(weatherAPIKey || weatherZipCode){
+            handleRefresh();
+        }
+    }
 
     // Subscribe to the videoFiles store
     const unsubscribe = videoFiles.subscribe((value) => {
@@ -71,6 +82,9 @@
         const savedSelectedFolders = localStorage.getItem("selectedFolders");
         const savedScreensaverMode = localStorage.getItem("screensaverMode");
         const savedScreensaverSpeed = localStorage.getItem("screensaverSpeed");
+        const savedWeatherAPIKey = localStorage.getItem("weatherAPIKey");
+        const savedWeatherZipCode = localStorage.getItem("weatherZipCode");
+        const savedWeatherAlwaysShow = localStorage.getItem("alwaysShowWeather");
 
         if (savedClockFont) {
             $clockFont = savedClockFont;
@@ -107,8 +121,36 @@
         if (savedScreensaverSpeed !== null) {
             screensaverSpeed = parseFloat(savedScreensaverSpeed);
         }
+        if (savedWeatherAPIKey !== null) {
+            weatherAPIKey = savedWeatherAPIKey;
+        }
+        if (savedWeatherZipCode !== null) {
+            weatherZipCode = savedWeatherZipCode;
+        }
+        if (savedWeatherAlwaysShow !== null) {
+            alwaysShowWeather = savedWeatherAlwaysShow === "true";;
+        }
+        if(weatherAPIKey.length > 0){
+            handleRefresh();
+            setInterval(handleRefresh, 5 * 60 * 1000);
+        }
         await fetchVideos(savedSelectedFolders ? savedSelectedFolders : []);
     });
+
+    function updateWeatherAPIKey(event) {
+        weatherAPIKey = event.target.value;
+        localStorage.setItem("weatherAPIKey", weatherAPIKey);
+    }
+
+    function updateWeatherZipCode(event) {
+        weatherZipCode = event.target.value;
+        localStorage.setItem("weatherZipCode", weatherZipCode);
+    }
+
+    function updateWeatherAlwaysShow(event) {
+        alwaysShowWeather = event.target.checked;
+        localStorage.setItem("alwaysShowWeather", alwaysShowWeather);
+    }
 
     function updateScreensaverMode(event) {
         enableScreensaver = event.target.checked;
@@ -138,9 +180,18 @@
         $clockFormat = selectedFormat.value;
         clockFormatLabel = selectedFormat.label
     }
+
+    async function handleRefresh() {
+        weatherData = await fetchWeatherData(weatherAPIKey, weatherZipCode);
+    }
 </script>
 
+{#if weatherData && weatherAPIKey.length >0 && (alwaysShowWeather || $showBlackBackground)}
+    <Weather {weatherData} />
+{/if}
+
 <VideoPlayer {videoIndex} {randomizeVideos} />
+
 
 
 {#if showClock || $showBlackBackground}
@@ -178,6 +229,12 @@
         {updateScreensaverMode}
         {screensaverSpeed}
         {updateScreensaverSpeed}
+        {weatherAPIKey}
+        {weatherZipCode}
+        {alwaysShowWeather}
+        {updateWeatherAPIKey}
+        {updateWeatherZipCode}
+        {updateWeatherAlwaysShow}
 />
 
 <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;" on:click={toggleDialog} on:keydown={toggleDialog}></div>
