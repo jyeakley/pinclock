@@ -156,7 +156,7 @@ async function handleWifiManagement(req, res) {
             command = '/usr/sbin/iwlist wlan0 scan | grep ESSID';
             break;
         case 'connect':
-            command = `wpa_supplicant -B -c /etc/wpa_supplicant/wpa_supplicant.conf -i wlan0 && sed -i "/^network={\\n\\tssid=\\\"${ssid}\\\"/d" /etc/wpa_supplicant/wpa_supplicant.conf && wpa_passphrase "${ssid}" "${password}" | tee -a /etc/wpa_supplicant/wpa_supplicant.conf > /dev/null && wpa_cli -i wlan0 reconfigure`;
+            command = `wpa_supplicant -B -c /etc/wpa_supplicant/wpa_supplicant.conf -i wlan0 && sed -i "/^network={\n\s*ssid=\"${ssid}\"/d" /etc/wpa_supplicant/wpa_supplicant.conf && wpa_passphrase "${ssid}" "${password}" | tee -a /etc/wpa_supplicant/wpa_supplicant.conf > /dev/null && wpa_cli -i wlan0 reconfigure`;
             break;
         case 'disconnect':
             command = 'wpa_cli -i wlan0 disconnect';
