@@ -15,8 +15,6 @@ services:
       context: .
       dockerfile: Dockerfile
     image: pinclock:latest
-    network_mode: "host"
-    privileged: true
     environment:
       - SOURCE_PATH=${MEDIA_HOME}/pinclock/videos
     env_file:
@@ -24,7 +22,6 @@ services:
     volumes:
       - videos:/static/videos
       - ${MEDIA_HOME}:${MEDIA_HOME}
-      - /etc/wpa_supplicant/wpa_supplicant.conf:/etc/wpa_supplicant/wpa_supplicant.conf
     ports:
       - 3001:3001
     command: node api/server.js
