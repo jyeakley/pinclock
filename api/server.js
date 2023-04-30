@@ -153,7 +153,7 @@ async function handleWifiManagement(req, res) {
     let command;
     switch (action) {
         case 'scan':
-            command = 'sudo iwlist wlan0 scan | grep ESSID';
+            command = '/usr/sbin/iwlist wlan0 scan | grep ESSID';
             break;
         case 'connect':
             command = `wpa_passphrase "${ssid}" "${password}" | sudo tee -a /etc/wpa_supplicant/wpa_supplicant.conf > /dev/null && sudo wpa_cli -i wlan0 reconfigure`;
