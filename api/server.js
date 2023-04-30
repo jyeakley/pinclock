@@ -156,10 +156,10 @@ async function handleWifiManagement(req, res) {
             command = '/usr/sbin/iwlist wlan0 scan | grep ESSID';
             break;
         case 'connect':
-            command = `wpa_passphrase "${ssid}" "${password}" | sudo tee -a /etc/wpa_supplicant/wpa_supplicant.conf > /dev/null && sudo wpa_cli -i wlan0 reconfigure`;
+            command = `wpa_passphrase "${ssid}" "${password}" | tee -a /etc/wpa_supplicant/wpa_supplicant.conf > /dev/null && wpa_cli -i wlan0 reconfigure`;
             break;
         case 'disconnect':
-            command = 'sudo wpa_cli -i wlan0 disconnect';
+            command = 'wpa_cli -i wlan0 disconnect';
             break;
         default:
             res.status(400).json({ error: 'Invalid action' });
