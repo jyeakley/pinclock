@@ -400,14 +400,14 @@
                 <button on:click={scanNetworks}>Scan for networks</button>
                 {#if wifiNetworks.length > 0}
                     <form on:submit|preventDefault={handleWifiSettingsSubmit}>
-                        <label for="networks">Select a network:</label>
-                        <select id="networks" bind:value={selectedNetwork}>
-                            {#each wifiNetworks as network (network)}
-                                <option value={network}>{network}</option>
+                        <label class="setting-label" for="networks">Select a network:</label>
+                        <select id="networks" bind:value={selectedNetwork.ssid}>
+                        {#each wifiNetworks as network (network)}
+                                <option value={network.ssid}>{network.ssid}</option>
                             {/each}
                         </select>
-                        <label for="password">Password:</label>
-                        <input id="password" type="password" bind:value={wifiPassword} />
+                        <label class="setting-label" for="password">Password:</label>
+                        <input class="setting-label" id="password" type="password" bind:value={wifiPassword} />
                         <button type="submit">Connect</button>
                     </form>
                 {:else}
