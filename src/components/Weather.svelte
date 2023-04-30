@@ -35,7 +35,8 @@
     }
 
     .condition {
-        font-size: .9em;
+        font-size: .75em;
+        margin-bottom: .2em;
     }
     .updated {
         font-size: .7em;

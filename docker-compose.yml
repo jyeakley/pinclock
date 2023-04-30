@@ -16,6 +16,7 @@ services:
       dockerfile: Dockerfile
     image: pinclock:latest
     network_mode: "host"
+    privileged: true
     environment:
       - SOURCE_PATH=${MEDIA_HOME}/pinclock/videos
     env_file:

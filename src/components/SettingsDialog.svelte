@@ -82,7 +82,10 @@
     }
 
     async function handleWifiSettingsSubmit() {
-        await connectToWifi(selectedNetwork, wifiPassword);
+        console.log(selectedNetwork)
+        console.log(selectedNetwork.ssid)
+        const selectedSsid = selectedNetwork.replace(/^"(.*)"$/, '$1');
+        await connectToWifi(selectedSsid, wifiPassword);
     }
 
     function updateClockSeparatorBlinkSpeed(event) {
@@ -401,10 +404,10 @@
                 {#if wifiNetworks.length > 0}
                     <form on:submit|preventDefault={handleWifiSettingsSubmit}>
                         <label class="setting-label" for="networks">Select a network:</label>
-                        <select id="networks" bind:value={selectedNetwork.ssid}>
+                        <select id="networks" bind:value={selectedNetwork}>
                         {#each wifiNetworks as network (network)}
-                                <option value={network.ssid}>{network.ssid}</option>
-                            {/each}
+                            <option value={network.ssid}>{network.ssid}</option>
+                        {/each}
                         </select>
                         <label class="setting-label" for="password">Password:</label>
                         <input class="setting-label" id="password" type="password" bind:value={wifiPassword} />
