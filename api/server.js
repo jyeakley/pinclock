@@ -6,6 +6,7 @@ import fss from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+import { exec } from 'child_process';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -147,7 +148,35 @@ app.delete('/api/clear_videos', async (req, res) => {
     }
 });
 
+async function handleWifiManagement(req, res) {
+    const { action, ssid, password } = req.body;
+    let command;
+    switch (action) {
+        case 'scan':
+            command = 'iwlist wlan0 scan | grep ESSID';
+            break;
+        case 'connect':
+            command = `wpa_passphrase "${ssid}" "${password}" | sudo tee -a /etc/wpa_supplicant/wpa_supplicant.conf > /dev/null && sudo wpa_cli -i wlan0 reconfigure`;
+            break;
+        case 'disconnect':
+            command = 'sudo wpa_cli -i wlan0 disconnect';
+            break;
+        default:
+            res.status(400).json({ error: 'Invalid action' });
+            return;
+    }
 
+    exec(command, (error, stdout, stderr) => {
+        if (error) {
+            res.status(500).json({ error: error.message });
+        } else {
+            res.json({ result: stdout.trim() });
+        }
+    });
+}
+
+app.use(express.json()); // Add this line to enable parsing JSON request bodies
+app.post('/api/wifi', handleWifiManagement);
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);

@@ -2,6 +2,8 @@
     import {timeBetweenVideos, videoFadeOutTime, videoFiles, videoPlayTime} from '../videoStore.js';
     import {clockSeparatorBlinkSpeed, clockTextShadow, overriddenClockTime} from '../store.js';
     import {fontOptions, formatOptions} from '../settings/clockSettings.js'
+    import { scanWifiNetworks, connectToWifi } from '../services/wifiService.js';
+
     import {addVideosFromSource, clearVideos, fetchVideoFolders, fetchVideos} from '../services/videoService.js';
     import {onDestroy, onMount} from "svelte";
 
@@ -39,6 +41,9 @@
     let selected = "";
     let isResizing = false;
     let startX, startY, startWidth, startHeight;
+    let wifiNetworks = [];
+    let selectedNetwork = '';
+    let wifiPassword = '';
 
     function resize(e) {
         if (!isResizing) return;
@@ -70,6 +75,14 @@
             document.defaultView.getComputedStyle(settingsElement).height,
             10
         );
+    }
+
+    async function scanNetworks() {
+        wifiNetworks = await scanWifiNetworks();
+    }
+
+    async function handleWifiSettingsSubmit() {
+        await connectToWifi(selectedNetwork, wifiPassword);
     }
 
     function updateClockSeparatorBlinkSpeed(event) {
@@ -129,6 +142,10 @@
         localStorage.setItem("selectedFolders", selected);
         fetchVideos(selectedArray.length > 0 ? selectedArray : null);
     }
+
+    onMount(async () => {
+        await scanNetworks();
+    });
 
     onMount(() => {
         loadFolders();
@@ -378,6 +395,25 @@
                 <input type="checkbox" bind:checked={alwaysShowWeather} on:change="{updateWeatherAlwaysShow}"/>
             </label>
             <br/>
+            <div>
+                <h2>Wi-Fi Settings</h2>
+                <button on:click={scanNetworks}>Scan for networks</button>
+                {#if wifiNetworks.length > 0}
+                    <form on:submit|preventDefault={handleWifiSettingsSubmit}>
+                        <label for="networks">Select a network:</label>
+                        <select id="networks" bind:value={selectedNetwork}>
+                            {#each wifiNetworks as network (network)}
+                                <option value={network}>{network}</option>
+                            {/each}
+                        </select>
+                        <label for="password">Password:</label>
+                        <input id="password" type="password" bind:value={wifiPassword} />
+                        <button type="submit">Connect</button>
+                    </form>
+                {:else}
+                    <p>No networks found.</p>
+                {/if}
+            </div>
         </div>
     </div>
 {/if}
