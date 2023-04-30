@@ -23,6 +23,7 @@ services:
     volumes:
       - videos:/static/videos
       - ${MEDIA_HOME}:${MEDIA_HOME}
+      - /etc/wpa_supplicant/wpa_supplicant.conf:/etc/wpa_supplicant/wpa_supplicant.conf
     ports:
       - 3001:3001
     command: node api/server.js
