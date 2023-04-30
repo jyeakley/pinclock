@@ -1,5 +1,8 @@
 FROM alpine:latest
 
+# Install wireless tools
+RUN apk add --no-cache wireless-tools
+
 ADD . .
 
 RUN apk add --update nodejs npm
