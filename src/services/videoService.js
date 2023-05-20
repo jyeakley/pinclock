@@ -9,7 +9,11 @@ export async function fetchVideos(folders = null) {
 
     if (response.ok) {
         const files = await response.json();
-        videoFiles.set(files);
+        if (files.length === 0){
+            fetchVideos();
+        }else{
+            videoFiles.set(files);
+        }
     } else {
         console.error("Error fetching video files");
     }
