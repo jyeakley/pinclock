@@ -1,16 +1,19 @@
 <script>
     import { videoFiles, showBlackBackground,videoFadeOutTime, timeBetweenVideos, videoPlayTime } from '../videoStore.js';
+    import {fetchVideos} from '../services/videoService.js';
     import { onMount } from 'svelte';
     import {onDestroy} from "svelte";
     export let videoIndex;
     export let randomizeVideos;
     let videos;
     let timeoutId;
+    let selected = [];
 
     onMount(() => {
         const savedVideoFadeOutTime = localStorage.getItem("videoFadeOutTime");
         const savedTimeBetweenVideos = localStorage.getItem("timeBetweenVideos");
         const savedVideoPlayTime = localStorage.getItem("videoPlayTime");
+        const savedSelectedFolders = localStorage.getItem("selectedFolders");
 
         if (savedVideoFadeOutTime) {
             $videoFadeOutTime = parseFloat(savedVideoFadeOutTime);
@@ -20,6 +23,9 @@
         }
         if (savedVideoPlayTime) {
             $videoPlayTime = parseFloat(savedVideoPlayTime);
+        }
+        if (savedSelectedFolders) {
+            selected = savedSelectedFolders.split(",");
         }
 
         setTimeout(changeBackground);
@@ -41,6 +47,7 @@
         }
 
         if (!videos[videoIndex] || videos[videoIndex] === 'undefined') {
+            await fetchVideos(selected.length > 0 ? selected : null)
             return;
         }
 
