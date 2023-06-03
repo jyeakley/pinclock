@@ -8,8 +8,6 @@
     let videos;
     let timeoutId;
     let selected = [];
-    let videoElement;
-    let isVideoLoaded = false;
 
     onMount(() => {
         const savedVideoFadeOutTime = localStorage.getItem("videoFadeOutTime");
@@ -30,15 +28,8 @@
             selected = savedSelectedFolders.split(",");
         }
 
-        videoElement = document.getElementById("background-video");
-        videoElement.addEventListener('loadedmetadata', handleVideoLoadedMetadata);
-
         setTimeout(changeBackground);
     });
-
-    function handleVideoLoadedMetadata() {
-        isVideoLoaded = true;
-    }
 
     async function changeBackground() {
         $showBlackBackground = true;
@@ -56,24 +47,26 @@
         }
 
         if (!videos[videoIndex] || videos[videoIndex] === 'undefined') {
-            await fetchVideos(selected.length > 0 ? selected : null);
+            await fetchVideos(selected.length > 0 ? selected : null)
             return;
         }
 
-        isVideoLoaded = false;
-
-        videoElement = document.getElementById("background-video");
+        const videoElement = document.getElementById("background-video");
         videoElement.src = `/videos/${encodeURIComponent(videos[videoIndex])}`;
         videoElement.style.transition = `opacity ${$videoFadeOutTime}s`;
         videoElement.style.opacity = 0;
-        await new Promise((resolve) => {
-            // Wait for the video metadata to load
-            videoElement.addEventListener('loadedmetadata', resolve);
+        videoElement.addEventListener('loadedmetadata', () => {
+            videoElement.currentTime = 0;
         });
         await new Promise((resolve) => setTimeout(resolve, $timeBetweenVideos * 1000));
         videoElement.play();
         videoElement.style.opacity = 1;
-        videoElement.onended = handleVideoEnded;
+
+        // Add this event listener to handle the video end event
+        videoElement.onended = () => {
+            clearTimeout(timeoutId);
+            changeBackground();
+        };
 
         $showBlackBackground = false;
 
@@ -86,28 +79,14 @@
         timeoutId = setTimeout(changeBackground, timeoutDuration);
     }
 
-    function handleVideoEnded() {
-        clearTimeout(timeoutId);
-        videoElement.onended = null; // Remove the event listener
-        changeBackground();
-    }
-
     // Subscribe to the videoFiles store
     const unsubscribe = videoFiles.subscribe((value) => {
         videos = value;
-        if (videos.length === 0 || videoIndex >= videos.length) {
-            fetchVideos(selected.length > 0 ? selected : null);
-        } else {
-            changeBackground();
-        }
+        changeBackground()
     });
 
-    onDestroy(() => {
-        unsubscribe();
-        if (videoElement) {
-            videoElement.onended = null; // Remove the event listener
-        }
-    });
+    // Unsubscribe from the store when the component is destroyed
+    onDestroy(unsubscribe);
 </script>
 
 <style>
