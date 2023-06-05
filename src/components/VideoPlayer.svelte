@@ -1,13 +1,21 @@
 <script>
-    import { videoFiles, showBlackBackground,videoFadeOutTime, timeBetweenVideos, videoPlayTime } from '../videoStore.js';
+    import {
+        showBlackBackground,
+        timeBetweenVideos,
+        videoFadeOutTime,
+        videoFiles,
+        videoPlayTime
+    } from '../videoStore.js';
     import {fetchVideos} from '../services/videoService.js';
-    import { onMount } from 'svelte';
-    import {onDestroy} from "svelte";
+    import {onDestroy, onMount} from 'svelte';
+
     export let videoIndex;
     export let randomizeVideos;
     let videos;
     let timeoutId;
     let selected = [];
+    let videoElement;
+    let isVideoLoaded = false;
 
     onMount(() => {
         const savedVideoFadeOutTime = localStorage.getItem("videoFadeOutTime");
@@ -31,6 +39,10 @@
         setTimeout(changeBackground);
     });
 
+    function handleVideoLoadedMetadata() {
+        isVideoLoaded = true;
+    }
+
     async function changeBackground() {
         $showBlackBackground = true;
         if (videos.length === 0) {
@@ -40,53 +52,69 @@
 
         // Select a video based on the randomizeVideos setting
         if ($randomizeVideos) {
-            const randomIndex = Math.floor(Math.random() * videos.length);
-            videoIndex = randomIndex;
+            videoIndex = Math.floor(Math.random() * videos.length);
         } else {
             videoIndex = (videoIndex + 1) % videos.length;
         }
 
         if (!videos[videoIndex] || videos[videoIndex] === 'undefined') {
-            await fetchVideos(selected.length > 0 ? selected : null)
+            await fetchVideos(selected.length > 0 ? selected : null);
             return;
         }
 
-        const videoElement = document.getElementById("background-video");
-        videoElement.src = `/videos/${encodeURIComponent(videos[videoIndex])}`;
-        videoElement.style.transition = `opacity ${$videoFadeOutTime}s`;
-        videoElement.style.opacity = 0;
-        videoElement.addEventListener('loadedmetadata', () => {
-            videoElement.currentTime = 0;
-        });
-        await new Promise((resolve) => setTimeout(resolve, $timeBetweenVideos * 1000));
-        videoElement.play();
-        videoElement.style.opacity = 1;
+        isVideoLoaded = false;
+        if(videoElement != null) {
+            videoElement.src = `/videos/${encodeURIComponent(videos[videoIndex])}`;
+            videoElement.style.transition = `opacity ${$videoFadeOutTime}s`;
+            videoElement.style.opacity = 0;
+            await new Promise((resolve) => {
+                // Wait for the video metadata to load
+                videoElement.addEventListener('loadedmetadata', resolve);
+            });
+            await new Promise((resolve) => setTimeout(resolve, $timeBetweenVideos * 1000));
+            videoElement.play();
+            videoElement.style.opacity = 1;
+            videoElement.onended = handleVideoEnded;
 
-        // Add this event listener to handle the video end event
-        videoElement.onended = () => {
+            $showBlackBackground = false;
+
             clearTimeout(timeoutId);
-            changeBackground();
-        };
 
-        $showBlackBackground = false;
+            const videoDuration = videoElement.duration;
+            const maxDuration = 120; // 2 minute video max
+            const timeToPlay = $videoPlayTime === 0 ? maxDuration : $videoPlayTime;
+            const timeoutDuration = Math.min(videoDuration, timeToPlay) * 1000;
+            timeoutId = setTimeout(changeBackground, timeoutDuration);
+        }else{
+            if(document){
+                videoElement = document.getElementById("background-video");
+                videoElement.addEventListener('loadedmetadata', handleVideoLoadedMetadata);
+            }
+        }
+    }
 
+    function handleVideoEnded() {
         clearTimeout(timeoutId);
-
-        const videoDuration = videoElement.duration;
-        const maxDuration = 120; // 2 minute video max
-        const timeToPlay = $videoPlayTime === 0 ? maxDuration : $videoPlayTime;
-        const timeoutDuration = Math.min(videoDuration, timeToPlay) * 1000;
-        timeoutId = setTimeout(changeBackground, timeoutDuration);
+        videoElement.onended = null; // Remove the event listener
+        changeBackground();
     }
 
     // Subscribe to the videoFiles store
     const unsubscribe = videoFiles.subscribe((value) => {
         videos = value;
-        changeBackground()
+        if (videos.length === 0 || videoIndex >= videos.length) {
+            fetchVideos(selected.length > 0 ? selected : null);
+        } else {
+            changeBackground();
+        }
     });
 
-    // Unsubscribe from the store when the component is destroyed
-    onDestroy(unsubscribe);
+    onDestroy(() => {
+        unsubscribe();
+        if (videoElement) {
+            videoElement.onended = null; // Remove the event listener
+        }
+    });
 </script>
 
 <style>
@@ -98,11 +126,13 @@
         height: 100%;
         z-index: -1;
     }
+
     video {
         object-fit: cover;
         width: 100%;
         height: 100%;
     }
+
     .black-background {
         position: fixed;
         top: 0;
@@ -114,6 +144,7 @@
         opacity: 0;
         transition: opacity 1s, z-index 1s;
     }
+
     .black-background.show {
         opacity: 1;
         z-index: 0; /* Change this value to ensure the black background is above the video */
