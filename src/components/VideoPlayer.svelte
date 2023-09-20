@@ -37,6 +37,13 @@
         }
 
         setTimeout(changeBackground);
+
+        if (videos.length === 0 || videoIndex >= videos.length) {
+            console.log("SAVED VP 2: " + selected);
+            fetchVideos(selected.length > 0 ? selected : null);
+        } else {
+            changeBackground();
+        }
     });
 
     function handleVideoLoadedMetadata() {
@@ -58,6 +65,7 @@
         }
 
         if (!videos[videoIndex] || videos[videoIndex] === 'undefined') {
+            console.log("SAVED VP 1: " + selected);
             await fetchVideos(selected.length > 0 ? selected : null);
             return;
         }
@@ -86,7 +94,7 @@
             const timeoutDuration = Math.min(videoDuration, timeToPlay) * 1000;
             timeoutId = setTimeout(changeBackground, timeoutDuration);
         }else{
-            if(document){
+            if (typeof document !== 'undefined') {
                 videoElement = document.getElementById("background-video");
                 videoElement.addEventListener('loadedmetadata', handleVideoLoadedMetadata);
             }
@@ -102,11 +110,15 @@
     // Subscribe to the videoFiles store
     const unsubscribe = videoFiles.subscribe((value) => {
         videos = value;
-        if (videos.length === 0 || videoIndex >= videos.length) {
-            fetchVideos(selected.length > 0 ? selected : null);
-        } else {
+        if (videos.length > 0) {
             changeBackground();
         }
+        // if (videos.length === 0 || videoIndex >= videos.length) {
+        //     console.log("SAVED VP 2: " + selected);
+        //     fetchVideos(selected.length > 0 ? selected : null);
+        // } else {
+        //     changeBackground();
+        // }
     });
 
     onDestroy(() => {

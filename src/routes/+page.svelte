@@ -134,6 +134,7 @@
             handleRefresh();
             setInterval(handleRefresh, 5 * 60 * 1000);
         }
+        console.log("SAVED HP: " + savedSelectedFolders);
         await fetchVideos(savedSelectedFolders ? savedSelectedFolders : []);
     });
 
