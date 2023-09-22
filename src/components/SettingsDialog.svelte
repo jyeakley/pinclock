@@ -356,12 +356,14 @@
             <br/>
             <button on:click={addVideosFromSource}>Sync Videos From USB</button>
             <br/>
-            <br/>
-            <label class="setting-label">
-                Clear all videos:
-                <button on:click="{clearVideos}">Clear</button>
-            </label>
-            <br/>
+            {#if window && window.location.hostname === 'localhost'}
+                <br/>
+                <label class="setting-label">
+                    Clear all videos:
+                    <button on:click="{clearVideos}">Clear</button>
+                </label>
+                <br/>
+            {/if}
             <h3>Weather</h3>
             <label class="setting-label">
                 Weather API Key (weatherapi.com):
