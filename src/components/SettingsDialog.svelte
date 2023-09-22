@@ -72,6 +72,12 @@
         );
     }
 
+    function refreshPage() {
+        if (typeof window !== 'undefined') {
+            window.location.reload();
+        }
+    }
+
     function updateClockSeparatorBlinkSpeed(event) {
         const blinkValue = parseFloat(event.target.value);
         $clockSeparatorBlinkSpeed = blinkValue;
@@ -338,6 +344,8 @@
             </label>
             <br/>
             <button on:click={fetchVideos}>Refresh Videos</button>
+            <br/>
+            <button on:click="{refreshPage}">Refresh Page</button>
             <br/>
             <div>
                 <h4>Select video folders (All will play if none selected):</h4>
