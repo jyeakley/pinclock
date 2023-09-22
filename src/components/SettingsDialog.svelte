@@ -354,9 +354,9 @@
                 <input type="checkbox" bind:checked={$randomizeVideos} on:change="{updateRandomizeVideos}"/>
             </label>
             <br/>
-            <button on:click={addVideosFromSource}>Sync Videos From USB</button>
-            <br/>
             {#if window && window.location.hostname === 'localhost'}
+                <button on:click={addVideosFromSource}>Sync Videos From USB</button>
+                <br/>
                 <br/>
                 <label class="setting-label">
                     Clear all videos:
