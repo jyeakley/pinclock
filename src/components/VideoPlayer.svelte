@@ -170,7 +170,7 @@
             src="/videos/{videos[videoIndex]}"
             muted
             preload="metadata"
-            controls playsinline
+            playsinline
     ></video>
 {/if}
 <div class="black-background" class:show="{$showBlackBackground}"></div>
