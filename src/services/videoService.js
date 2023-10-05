@@ -4,7 +4,12 @@ let HOSTNAME_URL = 'http://localhost:3001';
 
 if (typeof window !== 'undefined') {
     console.log("Grabbing hostname");
-    HOSTNAME_URL = `http://${window.location.hostname}:3001`;
+    if(window.location.hostname === 'localhost' || /^([0-9]{1,3}\.){3}[0-9]{1,3}$/.test(window.location.hostname)){
+        HOSTNAME_URL = `http://${window.location.hostname}:3001`;
+    }else{
+        HOSTNAME_URL = `https://${window.location.hostname}`;
+    }
+
 }
 
 export async function fetchVideos(folders = null) {

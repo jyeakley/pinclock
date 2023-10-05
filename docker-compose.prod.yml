@@ -1,0 +1,26 @@
+version: '3'
+services:
+  nginx:
+    restart: always
+    platform: linux/amd64
+    container_name: pinclock-nginx
+    image: pinclock-nginx:latest
+    build:
+      context: .
+      dockerfile: deploy/nginx/Dockerfile
+    environment:
+      - LETSENCRYPT_HOSTNAME=${LETSENCRYPT_HOSTNAME}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ssl:/etc/nginx/ssl
+      - letsencrypt:/etc/letsencrypt
+      - letsencrypt_logs:/var/log/letsencrypt
+      - sites_enabled:/etc/nginx/sites-enabled
+
+volumes:
+  ssl:
+  sites_enabled:
+  letsencrypt:
+  letsencrypt_logs:

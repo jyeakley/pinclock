@@ -2,6 +2,7 @@ version: '3'
 
 services:
   pinclock:
+    restart: always
     build:
       context: .
       dockerfile: Dockerfile
@@ -11,10 +12,11 @@ services:
     ports:
       - 3000:3000
   pinclock-api:
+    restart: always
     build:
       context: .
       dockerfile: Dockerfile
-    image: pinclock:latest
+    image: pinclock-api:latest
     environment:
       - SOURCE_PATH=${MEDIA_HOME}/pinclock/videos
     env_file:
