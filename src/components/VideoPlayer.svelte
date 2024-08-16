@@ -76,11 +76,10 @@
             videoElement.style.transition = `opacity ${$videoFadeOutTime}s`;
             videoElement.style.opacity = 0;
             await new Promise((resolve) => {
-                // Wait for the video metadata to load
-                videoElement.addEventListener('loadedmetadata', resolve);
+                videoElement.addEventListener('loadedmetadata', resolve, { once: true });
             });
             await new Promise((resolve) => setTimeout(resolve, $timeBetweenVideos * 1000));
-            videoElement.play();
+            videoElement.play().catch((error) => console.error("Playback error: ", error));
             videoElement.style.opacity = 1;
             videoElement.onended = handleVideoEnded;
 
@@ -89,7 +88,7 @@
             clearTimeout(timeoutId);
 
             const videoDuration = videoElement.duration;
-            const maxDuration = 120; // 2 minute video max
+            const maxDuration = 120;
             const timeToPlay = $videoPlayTime === 0 ? maxDuration : $videoPlayTime;
             const timeoutDuration = Math.min(videoDuration, timeToPlay) * 1000;
             timeoutId = setTimeout(changeBackground, timeoutDuration);
