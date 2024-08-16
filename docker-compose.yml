@@ -4,7 +4,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: pinclock:latest
+    image: us-docker.pkg.dev/fluid-mix-241702/gcr.io/pinclock:latest
     volumes:
       - videos:/build/client/videos
     ports:
@@ -14,7 +14,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: pinclock-api:latest
+    image: us-docker.pkg.dev/fluid-mix-241702/gcr.io/pinclock-api:latest
     environment:
       - SOURCE_PATH=${MEDIA_HOME}/pinclock/videos
     env_file:
