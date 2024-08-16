@@ -65,8 +65,13 @@
         }
 
         if (!videos[videoIndex] || videos[videoIndex] === 'undefined') {
-            console.log("SAVED VP 1: " + selected);
+        try {
             await fetchVideos(selected.length > 0 ? selected : null);
+        } catch (error) {
+            console.error("Failed to fetch videos: ", error);
+            // Handle the error, e.g., show a message or retry after some time
+            return;
+        }
             return;
         }
 
@@ -79,7 +84,13 @@
                 videoElement.addEventListener('loadedmetadata', resolve, { once: true });
             });
             await new Promise((resolve) => setTimeout(resolve, $timeBetweenVideos * 1000));
-            videoElement.play().catch((error) => console.error("Playback error: ", error));
+            try {
+                await videoElement.play();
+            } catch (error) {
+                console.error("Playback error: ", error);
+                // Handle playback errors here
+                return;
+            }
             videoElement.style.opacity = 1;
             videoElement.onended = handleVideoEnded;
 
